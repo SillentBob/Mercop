@@ -1,15 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class PlayerInputHandler : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
+    
+    [Header("Crosshair and Aim settings"), Space(5)]
     [SerializeField] private Image crosshairIcon;
-
-    [Header("Crosshair movement max range (x-horizontal,y-vertical)")] [SerializeField]
-    private Vector2 crosshairBounds;
-
+    [SerializeField, FormerlySerializedAs("crosshairBounds")]
+    private Vector2 crosshairMoveRange;
     [SerializeField] private Vector2 crosshairMoveSensitivity;
 
     private PlayerControls _controls;
@@ -83,10 +84,10 @@ public class PlayerInputHandler : MonoBehaviour
     private Vector3 GetClampedPosition(Vector2 input)
     {
         var localPosition = crosshairIcon.transform.localPosition;
-        var xPos = Mathf.Clamp(localPosition.x + input.x * crosshairMoveSensitivity.x, -crosshairBounds.x,
-            crosshairBounds.x);
-        var yPos = Mathf.Clamp(localPosition.y + input.y * crosshairMoveSensitivity.y, -crosshairBounds.y,
-            crosshairBounds.y);
+        var xPos = Mathf.Clamp(localPosition.x + input.x * crosshairMoveSensitivity.x, -crosshairMoveRange.x,
+            crosshairMoveRange.x);
+        var yPos = Mathf.Clamp(localPosition.y + input.y * crosshairMoveSensitivity.y, -crosshairMoveRange.y,
+            crosshairMoveRange.y);
         return new Vector3(xPos, yPos, 0);
     }
 
