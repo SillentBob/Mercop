@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class MenuManager : Singleton<MenuManager>
 {
-    [SerializeField] private Image mask;
+    [SerializeField] private Canvas mask;
+
     [SerializeField] private Transform mainMenuRoot;
     [SerializeField] private Transform contractMenuRoot;
     [SerializeField] private Button quitButton;
@@ -16,14 +17,15 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField] private float menuTransitionHalftime = 0.5f;
 
     private bool _isMenuTransitioning;
+    private Image maskImage;
 
     private void Start()
     {
+        maskImage = mask.GetComponentInChildren<Image>();
         contractsButton.onClick.AddListener(MaybeShowContractMenu);
         contractsBackButton.onClick.AddListener(MaybeShowMainMenu);
         quitButton.onClick.AddListener(Application.Quit);
         contractsPlayButton.onClick.AddListener(() => LoadLevel(0));
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void MaybeShowContractMenu()
@@ -56,40 +58,57 @@ public class MenuManager : Singleton<MenuManager>
         mainMenuRoot.gameObject.SetActive(false);
     }
 
-    private void TransitionMenu(Action onMaskChangeHalfway, Action onMaskChangeFinish, bool animateInAndOut = true)
+    private void TransitionMenu(Action onMaskChangeHalfway, Action onMaskChangeFinish)
     {
-        Tweener tweenerIn = DOTween.To(OnChangeAlpha, 0, 1, menuTransitionHalftime);
-        tweenerIn.onComplete = () =>
+        AnimateMaskIn(() =>
         {
             if (onMaskChangeHalfway != null)
             {
                 onMaskChangeHalfway.Invoke();
             }
 
-            if (animateInAndOut)
+            AnimateMaskOut(onMaskChangeFinish);
+        });
+    }
+
+    private void AnimateMaskIn(Action onFinish)
+    {
+        EnableMaskObject(true);
+        Tweener tweenerIn = DOTween.To(OnChangeAlpha, 0, 1, menuTransitionHalftime);
+        if (onFinish != null)
+        {
+            tweenerIn.onComplete = onFinish.Invoke;
+        }
+    }
+
+    private void AnimateMaskOut(Action onFinish)
+    {
+        Tweener tweenerOut = DOTween.To(OnChangeAlpha, 1, 0, menuTransitionHalftime);
+        tweenerOut.onComplete = () =>
+        {
+            if (onFinish != null)
             {
-                Tweener tweenerOut = DOTween.To(OnChangeAlpha, 1, 0, menuTransitionHalftime);
-                if (onMaskChangeFinish != null)
-                {
-                    tweenerOut.onComplete = onMaskChangeFinish.Invoke;
-                }
+                onFinish.Invoke();
             }
+
+            EnableMaskObject(false);
         };
+    }
+
+    private void EnableMaskObject(bool enable)
+    {
+        mask.gameObject.SetActive(enable);
     }
 
     private void OnChangeAlpha(float value)
     {
-        mask.color = new Color(0, 0, 0, value);
+        maskImage.color = new Color(maskImage.color.r, maskImage.color.g, maskImage.color.b, value);
     }
 
     private void LoadLevel(int level)
     {
         _isMenuTransitioning = true;
-        TransitionMenu(() => SceneManager.LoadScene("Level_1"), null, false); //TODO specific level loading
+        TransitionMenu(() => SceneManager.LoadScene("Level_1"), null); //TODO specific level loading
     }
 
-    void OnSceneLoaded(Scene s, LoadSceneMode mode)
-    {
-        _isMenuTransitioning = false;
-    }
 }
