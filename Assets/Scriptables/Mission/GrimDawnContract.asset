@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef6cf86bb67248fa97eb169d611c4f7b, type: 3}
+  m_Name: GrimDawnContract
+  m_EditorClassIdentifier: 
+  name: Operation Grim Dawn
+  description: Certain Leutenant is being hold in building marked on your radar and
+    we expect rescue mission for him is on the way. He has valuable information which
+    can be bad for us. Burn that building to the ground with him inside. Bring some
+    fire, {PLAYER} !
+  reward: {fileID: 11400000, guid: fe1832b113946c74089d4fa26480a941, type: 2}
+  moneyCost: 0
+  requiredReputationCondition: 1
+  reputationAmountRequired: 0
+  completed: 0
+  sceneName: Level_1
