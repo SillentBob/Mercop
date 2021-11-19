@@ -6,10 +6,7 @@ public class GameManager : Singleton<GameManager>
     public PlayerSettingsAttributes playerSettings;
 
     private bool _isGamePaused;
-
-    /// <summary>
-    /// 
-    /// </summary>
+    
     /// <returns>true if game is paused, false if resumed</returns>
     public bool PauseOrResumeGame()
     {
