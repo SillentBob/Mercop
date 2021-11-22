@@ -32,17 +32,17 @@ public class MenuManager : Singleton<MenuManager>
      
     // @formatter:on
 
-    private bool _isMenuLocked;
-    private Image _maskImage;
-    private ToggleGroup _contractsToggleGroup;
+    private bool isMenuLocked;
+    private Image maskImage;
+    private ToggleGroup contractsToggleGroup;
 
     private const string FORMATTER_TAG_PLAYER = "{PLAYER}";
 
     protected override void Awake()
     {
         base.Awake();
-        _maskImage = mask.GetComponentInChildren<Image>();
-        _contractsToggleGroup = contractListContainer.GetComponent<ToggleGroup>();
+        maskImage = mask.GetComponentInChildren<Image>();
+        contractsToggleGroup = contractListContainer.GetComponent<ToggleGroup>();
         RegisterMenuButtonEvents();
         RePopulateContractsList();
         ResolvePlayEnabled();
@@ -75,7 +75,7 @@ public class MenuManager : Singleton<MenuManager>
         {
             MissionContractAttributes contract = allContracts[i];
             Toggle toggle = Instantiate(contractSelectPrefab, contractListContainer);
-            toggle.group = _contractsToggleGroup;
+            toggle.group = contractsToggleGroup;
             toggle.GetComponentInChildren<TextMeshProUGUI>().SetText(contract.name);
             toggle.onValueChanged.AddListener(isChecked =>
             {
@@ -127,19 +127,19 @@ public class MenuManager : Singleton<MenuManager>
 
     private void MaybeAnimateShowContractMenu()
     {
-        if (!_isMenuLocked)
+        if (!isMenuLocked)
         {
-            _isMenuLocked = true;
-            TransitionMenu(ShowContractsMenu, () => _isMenuLocked = false);
+            isMenuLocked = true;
+            TransitionMenu(ShowContractsMenu, () => isMenuLocked = false);
         }
     }
 
     private void MaybeAnimateShowMainMenu()
     {
-        if (!_isMenuLocked)
+        if (!isMenuLocked)
         {
-            _isMenuLocked = true;
-            TransitionMenu(ShowMainMenu, () => _isMenuLocked = false);
+            isMenuLocked = true;
+            TransitionMenu(ShowMainMenu, () => isMenuLocked = false);
         }
     }
 
@@ -199,18 +199,18 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnChangeAlpha(float value)
     {
-        _maskImage.color = new Color(_maskImage.color.r, _maskImage.color.g, _maskImage.color.b, value);
+        maskImage.color = new Color(maskImage.color.r, maskImage.color.g, maskImage.color.b, value);
     }
 
     private void LoadLevel()
     {
-        _isMenuLocked = true;
+        isMenuLocked = true;
         TransitionMenu(() =>
             {
                 SceneManager.LoadScene(GameManager.Instance.selectedContract.sceneName);
                 PlayerGuiManager.Instance.ShowGui(true);
             },
-            () => _isMenuLocked = false);
+            () => isMenuLocked = false);
     }
 
 

@@ -5,12 +5,12 @@ public class GameManager : Singleton<GameManager>
     public MissionContractAttributes selectedContract;
     public PlayerSettingsAttributes playerSettings;
 
-    private bool _isGamePaused;
+    private bool isGamePaused;
     
     /// <returns>true if game is paused, false if resumed</returns>
     public bool PauseOrResumeGame()
     {
-        if (!_isGamePaused)
+        if (!isGamePaused)
         {
             //InputSystem.settings.updateMode = InputSettings.UpdateMode.ProcessEventsInDynamicUpdate;
             Time.timeScale = 0;
@@ -21,7 +21,7 @@ public class GameManager : Singleton<GameManager>
             Time.timeScale = 1;
         }
 
-        _isGamePaused = !_isGamePaused;
-        return _isGamePaused;
+        isGamePaused = !isGamePaused;
+        return isGamePaused;
     }
 }

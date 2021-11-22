@@ -12,16 +12,16 @@ public class PlayerInputHandler : MonoBehaviour
     private Vector2 crosshairMoveRange;
     [SerializeField] private Vector2 crosshairMoveSensitivity;
 
-    private PlayerControls _controls;
-    private bool _isMoving;
-    private bool _isAiming;
+    private PlayerControls controls;
+    private bool isMoving;
+    private bool isAiming;
 
-    private Vector2 _currentMoveValues;
-    private Vector2 _currentAimValues;
+    private Vector2 currentMoveValues;
+    private Vector2 currentAimValues;
 
     private void Awake()
     {
-        _controls = new PlayerControls();
+        controls = new PlayerControls();
     }
 
     private void Start()
@@ -31,12 +31,12 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (_isMoving)
+        if (isMoving)
         {
             ProcessMoveInputs();
         }
 
-        if (_isAiming)
+        if (isAiming)
         {
             ProcessAimInputs();
         }
@@ -44,18 +44,18 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        _controls.Enable();
+        controls.Enable();
     }
 
     private void OnDisable()
     {
-        _controls.Disable();
+        controls.Disable();
     }
 
     private void ProcessMoveInputs()
     {
-        var rotationInput = _currentMoveValues.x;
-        var forwardInput = _currentMoveValues.y;
+        var rotationInput = currentMoveValues.x;
+        var forwardInput = currentMoveValues.y;
         if (rotationInput != 0)
         {
             playerController.Rotate(new Vector3(0, rotationInput * Time.deltaTime, 0));
@@ -69,9 +69,9 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void ProcessAimInputs()
     {
-        if (_currentAimValues != Vector2.zero)
+        if (currentAimValues != Vector2.zero)
         {
-            MoveCrosshair(_currentAimValues * Time.deltaTime);
+            MoveCrosshair(currentAimValues * Time.deltaTime);
         }
     }
 
@@ -82,42 +82,42 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void RegisterKeysToFunctions()
     {
-        _controls.Player.Move.performed += OnMove;
-        _controls.Player.Move.started += OnMoveStart;
-        _controls.Player.Move.canceled += OnMoveEnd;
+        controls.Player.Move.performed += OnMove;
+        controls.Player.Move.started += OnMoveStart;
+        controls.Player.Move.canceled += OnMoveEnd;
 
-        _controls.Player.Aim.performed += OnAim;
-        _controls.Player.Aim.started += OnAimStart;
-        _controls.Player.Aim.canceled += OnAimEnd;
+        controls.Player.Aim.performed += OnAim;
+        controls.Player.Aim.started += OnAimStart;
+        controls.Player.Aim.canceled += OnAimEnd;
     }
 
     private void OnMove(InputAction.CallbackContext ctx)
     {
-        _currentMoveValues = ctx.ReadValue<Vector2>();
+        currentMoveValues = ctx.ReadValue<Vector2>();
     }
 
     private void OnMoveStart(InputAction.CallbackContext ctx)
     {
-        _isMoving = true;
+        isMoving = true;
     }
 
     private void OnMoveEnd(InputAction.CallbackContext ctx)
     {
-        _isMoving = false;
+        isMoving = false;
     }
 
     private void OnAim(InputAction.CallbackContext ctx)
     {
-        _currentAimValues = ctx.ReadValue<Vector2>();
+        currentAimValues = ctx.ReadValue<Vector2>();
     }
 
     private void OnAimStart(InputAction.CallbackContext ctx)
     {
-        _isAiming = true;
+        isAiming = true;
     }
 
     private void OnAimEnd(InputAction.CallbackContext ctx)
     {
-        _isAiming = false;
+        isAiming = false;
     }
 }
