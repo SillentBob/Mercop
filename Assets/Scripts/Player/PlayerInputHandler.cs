@@ -103,6 +103,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnMoveEnd(InputAction.CallbackContext ctx)
     {
+        //playerController.Move(Vector3.zero);
         isMoving = false;
     }
 

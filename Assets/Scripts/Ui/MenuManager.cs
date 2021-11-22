@@ -204,13 +204,16 @@ public class MenuManager : Singleton<MenuManager>
 
     private void LoadLevel()
     {
-        isMenuLocked = true;
-        TransitionMenu(() =>
-            {
-                SceneManager.LoadScene(GameManager.Instance.selectedContract.sceneName);
-                PlayerGuiManager.Instance.ShowGui(true);
-            },
-            () => isMenuLocked = false);
+        if (!isMenuLocked)
+        {
+            isMenuLocked = true;
+            TransitionMenu(() =>
+                {
+                    SceneManager.LoadScene(GameManager.Instance.selectedContract.sceneName);
+                    PlayerGuiManager.Instance.ShowGui(true);
+                },
+                () => isMenuLocked = false);
+        }
     }
 
 
