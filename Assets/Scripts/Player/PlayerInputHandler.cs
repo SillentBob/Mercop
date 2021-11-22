@@ -8,7 +8,6 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     
     [Header("Crosshair and Aim settings"), Space(5)]
-    [SerializeField] private Image crosshairIcon;
     [SerializeField, FormerlySerializedAs("crosshairBounds")]
     private Vector2 crosshairMoveRange;
     [SerializeField] private Vector2 crosshairMoveSensitivity;
@@ -78,17 +77,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void MoveCrosshair(Vector2 input)
     {
-        crosshairIcon.transform.localPosition = GetClampedPosition(input);
-    }
-
-    private Vector3 GetClampedPosition(Vector2 input)
-    {
-        var localPosition = crosshairIcon.transform.localPosition;
-        var xPos = Mathf.Clamp(localPosition.x + input.x * crosshairMoveSensitivity.x, -crosshairMoveRange.x,
-            crosshairMoveRange.x);
-        var yPos = Mathf.Clamp(localPosition.y + input.y * crosshairMoveSensitivity.y, -crosshairMoveRange.y,
-            crosshairMoveRange.y);
-        return new Vector3(xPos, yPos, 0);
+        PlayerGuiManager.Instance.MoveCrosshair(input, crosshairMoveSensitivity, crosshairMoveRange);
     }
 
     private void RegisterKeysToFunctions()
