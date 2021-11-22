@@ -1,17 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public class PlayerInputHandler : MonoBehaviour
 {
-    [SerializeField] private PlayerController playerController;
+    // @formatter:off
     
-    [Header("Crosshair and Aim settings"), Space(5)]
-    [SerializeField, FormerlySerializedAs("crosshairBounds")]
-    private Vector2 crosshairMoveRange;
+    [SerializeField] private PlayerController playerController;
+
+    [Header("Crosshair and Aim settings"), Space(5)] 
+    [SerializeField] private Vector2 crosshairMoveRange;
     [SerializeField] private Vector2 crosshairMoveSensitivity;
 
+     // @formatter:on
+    
     private PlayerControls controls;
     private bool isMoving;
     private bool isAiming;
@@ -103,7 +104,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnMoveEnd(InputAction.CallbackContext ctx)
     {
-        //playerController.Move(Vector3.zero);
         isMoving = false;
     }
 
