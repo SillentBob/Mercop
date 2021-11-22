@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Core;
+using Core.Events;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -9,7 +11,8 @@ using UnityEngine.UI;
 public class MenuManager : Singleton<MenuManager>
 {
     // @formatter:off
-    [SerializeField] private Canvas mask;
+    [SerializeField] private string mainMenuSceneName = "MainMenu"; //TODO change to some reference
+    [SerializeField] private SceneMask mask;
     [SerializeField] private float menuTransitionHalftime = 0.5f;
     
     [Header("Main Menu")] 
@@ -29,7 +32,13 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField] private TextMeshProUGUI contractDesctiption;
     [SerializeField] private TextMeshProUGUI contractRewardMoney;
     [SerializeField] private TextMeshProUGUI contractRewardReputation;
-     
+    
+    [Header("Pause Menu")]
+    [SerializeField] private PauseMenu pauseMenuRoot;
+    [SerializeField] private Button pauseMenuQuitButton;
+    [SerializeField] private Button pauseMenuMainmenuButton;
+    [SerializeField] private Button pauseMenuResumeButton;
+    
     // @formatter:on
 
     private bool isMenuLocked;
@@ -43,24 +52,31 @@ public class MenuManager : Singleton<MenuManager>
         base.Awake();
         maskImage = mask.GetComponentInChildren<Image>();
         contractsToggleGroup = contractListContainer.GetComponent<ToggleGroup>();
-        RegisterMenuButtonEvents();
-        RePopulateContractsList();
-        ResolvePlayEnabled();
+        EventManager.AddListener(EventTypes.Pause, OnPauseChange);
     }
 
     private void Start()
     {
+        RegisterMenuButtonEvents();
+        RePopulateContractsList();
+        ResolvePlayEnabled();
+        
         ShowMainMenu();
         SetPlayerName(playerNameInput.text);
     }
 
     private void RegisterMenuButtonEvents()
     {
-        contractsButton.onClick.AddListener(MaybeAnimateShowContractMenu);
-        contractsBackButton.onClick.AddListener(MaybeAnimateShowMainMenu);
-        quitButton.onClick.AddListener(Application.Quit);
-        contractsPlayButton.onClick.AddListener(LoadLevel);
+        quitButton.onClick.AddListener(MaybeAnimateQuitGame);
         playerNameInput.onValueChanged.AddListener(SetPlayerName);
+        contractsButton.onClick.AddListener(MaybeAnimateShowContractMenu);
+
+        contractsBackButton.onClick.AddListener(MaybeAnimateShowMainMenu);
+        contractsPlayButton.onClick.AddListener(LoadSelectedLevel);
+
+        pauseMenuQuitButton.onClick.AddListener(MaybeAnimateQuitGame);
+        pauseMenuMainmenuButton.onClick.AddListener(LoadMainMenu);
+        pauseMenuResumeButton.onClick.AddListener(ResumeGameplay);
     }
 
     private void RePopulateContractsList()
@@ -76,7 +92,7 @@ public class MenuManager : Singleton<MenuManager>
             MissionContractAttributes contract = allContracts[i];
             Toggle toggle = Instantiate(contractSelectPrefab, contractListContainer);
             toggle.group = contractsToggleGroup;
-            toggle.GetComponentInChildren<TextMeshProUGUI>().SetText(contract.name);
+            toggle.GetComponentInChildren<TextMeshProUGUI>().SetText(contract.contractName);
             toggle.onValueChanged.AddListener(isChecked =>
             {
                 if (isChecked)
@@ -99,7 +115,7 @@ public class MenuManager : Singleton<MenuManager>
             }
         }
     }
-    
+
     private void ResolvePlayEnabled()
     {
         contractsPlayButton.interactable = GameManager.Instance.selectedContract != null;
@@ -110,7 +126,7 @@ public class MenuManager : Singleton<MenuManager>
         GameManager.Instance.selectedContract = contract;
         ResolvePlayEnabled();
         contractDesctiption.SetText(contract != null ? GetFormattedDescription(contract.description) : "");
-        contractDesctiptionHeader.SetText(contract != null ? contract.name : "");
+        contractDesctiptionHeader.SetText(contract != null ? contract.contractName : "");
         contractRewardMoney.SetText(contract != null ? $"{contract.reward.money} $" : "");
         contractRewardReputation.SetText(contract != null ? $"{contract.reward.reputation} REP" : "");
     }
@@ -127,19 +143,25 @@ public class MenuManager : Singleton<MenuManager>
 
     private void MaybeAnimateShowContractMenu()
     {
-        if (!isMenuLocked)
-        {
-            isMenuLocked = true;
-            TransitionMenu(ShowContractsMenu, () => isMenuLocked = false);
-        }
+        MaybeAnimateShowMenu(ShowContractsMenu);
     }
 
     private void MaybeAnimateShowMainMenu()
     {
+        MaybeAnimateShowMenu(ShowMainMenu);
+    }
+
+    private void MaybeAnimateQuitGame()
+    {
+        MaybeAnimateShowMenu(Application.Quit);
+    }
+
+    private void MaybeAnimateShowMenu(Action menuAction)
+    {
         if (!isMenuLocked)
         {
             isMenuLocked = true;
-            TransitionMenu(ShowMainMenu, () => isMenuLocked = false);
+            TransitionMenu(menuAction, () => isMenuLocked = false);
         }
     }
 
@@ -148,11 +170,18 @@ public class MenuManager : Singleton<MenuManager>
         mainMenuRoot.gameObject.SetActive(true);
         contractMenuRoot.gameObject.SetActive(false);
     }
+    
+    
 
     private void ShowContractsMenu()
     {
         contractMenuRoot.gameObject.SetActive(true);
         mainMenuRoot.gameObject.SetActive(false);
+    }
+
+    private void ShowPauseMenu(bool show)
+    {
+        pauseMenuRoot.gameObject.SetActive(show);
     }
 
     private void TransitionMenu(Action onMaskChangeHalfway, Action onMaskChangeFinish)
@@ -172,6 +201,7 @@ public class MenuManager : Singleton<MenuManager>
     {
         EnableMaskObject(true);
         Tweener tweenerIn = DOTween.To(OnChangeAlpha, 0, 1, menuTransitionHalftime);
+        tweenerIn.SetUpdate(true);
         if (onFinish != null)
         {
             tweenerIn.onComplete = onFinish.Invoke;
@@ -181,6 +211,7 @@ public class MenuManager : Singleton<MenuManager>
     private void AnimateMaskOut(Action onFinish)
     {
         Tweener tweenerOut = DOTween.To(OnChangeAlpha, 1, 0, menuTransitionHalftime);
+        tweenerOut.SetUpdate(true);
         tweenerOut.onComplete = () =>
         {
             if (onFinish != null)
@@ -202,19 +233,31 @@ public class MenuManager : Singleton<MenuManager>
         maskImage.color = new Color(maskImage.color.r, maskImage.color.g, maskImage.color.b, value);
     }
 
-    private void LoadLevel()
+    private void LoadSelectedLevel()
     {
-        if (!isMenuLocked)
-        {
-            isMenuLocked = true;
-            TransitionMenu(() =>
-                {
-                    SceneManager.LoadScene(GameManager.Instance.selectedContract.sceneName);
-                    PlayerGuiManager.Instance.ShowGui(true);
-                },
-                () => isMenuLocked = false);
-        }
+        MaybeAnimateShowMenu(() =>
+            {
+                SceneManager.LoadScene(GameManager.Instance.selectedContract.sceneName, LoadSceneMode.Single); // single??
+                PlayerGuiManager.Instance.ShowGui(true);
+                mainMenuRoot.gameObject.SetActive(false);
+                contractMenuRoot.gameObject.SetActive(false);
+            }
+        );
     }
 
+    private void LoadMainMenu()
+    {
+        MaybeAnimateShowMenu(() => SceneManager.LoadScene(mainMenuSceneName));
+    }
 
+    private void ResumeGameplay()
+    {
+        EventManager.Invoke(EventTypes.Pause, new PauseEvent(false));
+    }
+
+    private void OnPauseChange(PauseEvent evt)
+    {
+        var show = evt.isPaused;
+        MaybeAnimateShowMenu(() => ShowPauseMenu(show));
+    }
 }

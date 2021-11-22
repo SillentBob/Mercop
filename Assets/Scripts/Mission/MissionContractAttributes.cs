@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(menuName = "Scriptables/Mission/MissionContractAttributes")]
 public class MissionContractAttributes : ScriptableObject
 {
     // @formatter:off
-    public string name;
+    [FormerlySerializedAs("name")]public string contractName;
     [TextArea] public string description;
     
     [Space(20)]

@@ -1,3 +1,5 @@
+using Core;
+using Core.Events;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -6,22 +8,24 @@ public class GameManager : Singleton<GameManager>
     public PlayerSettingsAttributes playerSettings;
 
     private bool isGamePaused;
-    
-    /// <returns>true if game is paused, false if resumed</returns>
-    public bool PauseOrResumeGame()
+
+    protected override void Awake()
     {
-        if (!isGamePaused)
+        base.Awake();
+        EventManager.AddListener(EventTypes.Pause, OnPauseChange);
+    }
+    
+    private void OnPauseChange(PauseEvent evt)
+    {
+        isGamePaused = evt.isPaused;
+        if (isGamePaused)
         {
-            //InputSystem.settings.updateMode = InputSettings.UpdateMode.ProcessEventsInDynamicUpdate;
             Time.timeScale = 0;
         }
         else
         {
-            //InputSystem.settings.updateMode = InputSettings.UpdateMode.ProcessEventsInFixedUpdate;
             Time.timeScale = 1;
         }
-
-        isGamePaused = !isGamePaused;
-        return isGamePaused;
     }
+    
 }
