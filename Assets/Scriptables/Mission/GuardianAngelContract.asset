@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6cf86bb67248fa97eb169d611c4f7b, type: 3}
   m_Name: GuardianAngelContract
   m_EditorClassIdentifier: 
-  name: Operation Guardian Angel
+  contractName: Operation Guardian Angel
   description: Leutenant Kovalsky is in dire situation. Your task is to land on helipad
     in enemy base, wait few seconds for him. He's hiding nearby and waiting for you,
     {PLAYER}. Don't screw this up and get back to your base with him,  alive.

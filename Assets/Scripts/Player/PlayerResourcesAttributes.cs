@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Scripatbles/Player/PlayerResourcesAttributes")]
-public class PlayerResourcesAttributes : ScriptableObject
+namespace Player
 {
-    public int money;
-    public int reputation;
-    public int experience;
+    [CreateAssetMenu(menuName = "Scripatbles/Player/PlayerResourcesAttributes")]
+    public class PlayerResourcesAttributes : ScriptableObject
+    {
+        public int money;
+        public int reputation;
+        public int experience;
+    }
 }

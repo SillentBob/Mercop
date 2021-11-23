@@ -1,57 +1,64 @@
-using System;
 using Core;
 using Core.Events;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseMenuManager : Singleton<PauseMenuManager>
+namespace Ui
 {
-    [Header("Pause Menu")] [SerializeField]
-    private PauseMenu pauseMenuRoot;
-
-    [SerializeField] private Button pauseMenuQuitButton;
-    [SerializeField] private Button pauseMenuMainmenuButton;
-
-    [SerializeField] private Button pauseMenuResumeButton;
-    //[SerializeField] private string mainMenuSceneName = "MainMenu"; //TODO change to some reference
-
-    protected override void Awake()
+    public class PauseMenuManager : Singleton<PauseMenuManager>
     {
-        base.Awake();
-        RegisterMenuButtonEvents();
-        EventManager.AddListener(EventTypes.Pause, OnPauseChange);
-    }
+        // @formatter:off
+        [SerializeField] private PauseMenu pauseMenuRoot;
+        [SerializeField] private Button pauseMenuQuitButton;
+        [SerializeField] private Button pauseMenuMainmenuButton;
+        [SerializeField] private Button pauseMenuResumeButton;
+        // @formatter:on
 
-    private void RegisterMenuButtonEvents()
-    {
-        pauseMenuQuitButton.onClick.AddListener(QuitGame);
-        pauseMenuMainmenuButton.onClick.AddListener(LoadMainMenu);
-        pauseMenuResumeButton.onClick.AddListener(ResumeGameplay);
-    }
+        protected override void Awake()
+        {
+            base.Awake();
+            RegisterMenuButtonEvents();
+            EventManager.AddListener(EventTypes.Pause, OnPauseChange);
+        }
 
-    private void QuitGame()
-    {
-        EventManager.Invoke(EventTypes.Quit, new QuitGameEvent());
-    }
+        private void RegisterMenuButtonEvents()
+        {
+            pauseMenuQuitButton.onClick.AddListener(QuitGame);
+            pauseMenuMainmenuButton.onClick.AddListener(LoadMainMenu);
+            pauseMenuResumeButton.onClick.AddListener(ResumeGameplay);
+        }
 
-    private void ResumeGameplay()
-    {
-        EventManager.Invoke(EventTypes.Pause, evt: new PauseEvent(false));
-    }
+        private void QuitGame()
+        {
+            EventManager.Invoke(EventTypes.Quit, new QuitGameEvent());
+        }
 
-    private void OnPauseChange(PauseEvent evt)
-    {
-        var show = evt.isPaused;
-        ScreenMaskManager.Instance.MaybeAnimateShowMask(() => ShowPauseMenu(show));
-    }
+        private void ResumeGameplay()
+        {
+            EventManager.Invoke(EventTypes.Pause, evt: new PauseEvent(false));
+        }
 
-    private void ShowPauseMenu(bool show)
-    {
-        pauseMenuRoot.gameObject.SetActive(show);
-    }
+        private void OnPauseChange(PauseEvent evt)
+        {
+            if (evt.isPaused)
+            {
+                ScreenMaskManager.Instance.MaybeAnimateShowMask(() => ShowPauseMenu(true));
+            }
+        }
 
-    private void LoadMainMenu()
-    {
-        EventManager.Invoke(EventTypes.LoadScene, evt: new LoadSceneEvent(true));
+        private void ShowPauseMenu(bool show)
+        {
+            pauseMenuRoot.gameObject.SetActive(show);
+        }
+
+        private void LoadMainMenu()
+        {
+            ScreenMaskManager.Instance.MaybeAnimateShowMask(() =>
+            {
+                ShowPauseMenu(false);
+                ResumeGameplay();
+                EventManager.Invoke(EventTypes.LoadScene, evt: new LoadSceneEvent(null, true, true, false));
+            });
+        }
     }
 }

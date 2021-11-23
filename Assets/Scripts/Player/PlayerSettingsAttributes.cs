@@ -1,9 +1,13 @@
 using UnityEngine;
+using Vehicle;
 
-[CreateAssetMenu(menuName = "Scriptables/Settings/PlayerSettingsAttributes")]
-public class PlayerSettingsAttributes : ScriptableObject
+namespace Player
 {
-    public VehicleAttribtes selectedVehicle;
-    public string playerName = "Player";
+    [CreateAssetMenu(menuName = "Scriptables/Settings/PlayerSettingsAttributes")]
+    public class PlayerSettingsAttributes : ScriptableObject
+    {
+        public VehicleAttribtes selectedVehicle;
+        public string playerName = "Player";
     
+    }
 }

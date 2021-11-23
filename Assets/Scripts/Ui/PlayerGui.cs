@@ -1,5 +1,8 @@
 using UnityEngine;
 
-public class PlayerGui : MonoBehaviour
+namespace Ui
 {
+    public class PlayerGui : MonoBehaviour
+    {
+    }
 }

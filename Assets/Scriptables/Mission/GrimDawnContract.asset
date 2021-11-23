@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6cf86bb67248fa97eb169d611c4f7b, type: 3}
   m_Name: GrimDawnContract
   m_EditorClassIdentifier: 
-  name: Operation Grim Dawn
+  contractName: Operation Grim Dawn
   description: Certain Leutenant is being hold in building marked on your radar and
     we expect rescue mission for him is on the way. He has valuable information which
     can be bad for us. Burn that building to the ground with him inside. Bring some

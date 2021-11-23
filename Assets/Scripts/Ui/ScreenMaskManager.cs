@@ -1,13 +1,15 @@
 ﻿using System;
+using Core;
 using Core.Events;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Core
+namespace Ui
 {
     public class ScreenMaskManager : Singleton<ScreenMaskManager>
     {
+        [SerializeField] private ScreenMask screenMaskRoot;
         [SerializeField] private Image maskImage;
         [SerializeField] private float maskAnimationHalfTime = 0.5f;
         
@@ -23,6 +25,7 @@ namespace Core
         {
             if (!isMaskAnimating)
             {
+                EnableMaskObject(true);
                 isMaskAnimating = true;
                 AnimateMaskInAndOut(onMaskInFinish, () => isMaskAnimating = false);
             }
@@ -69,7 +72,7 @@ namespace Core
 
         private void EnableMaskObject(bool enable)
         {
-            maskImage.gameObject.SetActive(enable);
+            screenMaskRoot.gameObject.SetActive(enable);
         }
 
         private void OnChangeAlpha(float value)

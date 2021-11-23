@@ -1,46 +1,58 @@
 using System.Collections;
-using Core;
+using System.Collections.Generic;
+using System.Linq;
 using Core.Events;
+using Mission;
+using Player;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+namespace Core
 {
-    [SerializeField] private float quitGameDelay = 0.5f;
-    public MissionContractAttributes selectedContract;
-    public PlayerSettingsAttributes playerSettings;
-
-    private bool isGamePaused;
-
-    protected override void Awake()
+    public class GameManager : Singleton<GameManager>
     {
-        base.Awake();
-        EventManager.AddListener(EventTypes.Pause, OnPauseChange);
-        EventManager.AddListener(EventTypes.Quit, OnGameQuit);
-    }
-    
-    private void OnPauseChange(PauseEvent evt)
-    {
-        isGamePaused = evt.isPaused;
-        if (isGamePaused)
+        [SerializeField] private float quitGameDelay = 0.5f;
+        [SerializeField] private List<MissionContractAttributes> allContracts;
+        public MissionContractAttributes selectedContract;
+        public PlayerSettingsAttributes playerSettings;
+        public PlayerResourcesAttributes playerResources;
+
+        private bool isGamePaused;
+
+        protected override void Awake()
         {
-            Time.timeScale = 0;
+            base.Awake();
+            EventManager.AddListener(EventTypes.Pause, OnPauseChange);
+            EventManager.AddListener(EventTypes.Quit, OnGameQuit);
         }
-        else
-        {
-            Time.timeScale = 1;
-        }
-    }
-    
-    private void OnGameQuit(QuitGameEvent evt)
-    {
-        StartCoroutine(QuitRoutine());
-    }
 
-    private IEnumerator QuitRoutine()
-    {
-        Debug.Log("Application.Quit()");
-        yield return new WaitForSeconds(quitGameDelay);
-        Application.Quit();
-    }
+        public List<MissionContractAttributes> getAvailableContracts()
+        {
+            return allContracts.Where(m => !m.completed).ToList();;
+        }
     
+        private void OnPauseChange(PauseEvent evt)
+        {
+            isGamePaused = evt.isPaused;
+            if (isGamePaused)
+            {
+                Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+        }
+
+        private void OnGameQuit(QuitGameEvent evt)
+        {
+            StartCoroutine(QuitRoutine());
+        }
+
+        private IEnumerator QuitRoutine()
+        {
+            Debug.Log("Application.Quit()");
+            yield return new WaitForSeconds(quitGameDelay);
+            Application.Quit();
+        }
+    }
 }

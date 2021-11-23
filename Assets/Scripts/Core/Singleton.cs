@@ -1,45 +1,48 @@
 using UnityEngine;
 
-public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+namespace Core
 {
-    #region Private Variables
-
-    private static T instance;
-
-    #endregion
-
-    #region Public Properties
-
-    public static T Instance
+    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        get
+        #region Private Variables
+
+        private static T instance;
+
+        #endregion
+
+        #region Public Properties
+
+        public static T Instance
         {
-            if (instance == null)
+            get
             {
-                instance = (T)FindObjectOfType(typeof(T));
                 if (instance == null)
                 {
-                    instance = new GameObject(typeof(T).ToString()).AddComponent<T>();
+                    instance = (T)FindObjectOfType(typeof(T));
+                    if (instance == null)
+                    {
+                        instance = new GameObject(typeof(T).ToString()).AddComponent<T>();
+                    }
                 }
+                return instance;
             }
-            return instance;
+            set
+            {
+                instance = value;
+            }
         }
-        set
+
+        #endregion
+
+        #region Unity Callbacks
+
+        protected virtual void Awake()
         {
-            instance = value;
+            instance = this as T;
+            //DontDestroyOnLoad(instance.gameObject); //Not needed, we use singletons from persistent common scene
+            Debug.Log($"{typeof(T)} created.");
         }
+
+        #endregion
     }
-
-    #endregion
-
-    #region Unity Callbacks
-
-    protected virtual void Awake()
-    {
-        instance = this as T;
-        //DontDestroyOnLoad(instance.gameObject); //Not needed, we use singletons from persistent common scene
-        Debug.Log($"{typeof(T)} created.");
-    }
-
-    #endregion
 }

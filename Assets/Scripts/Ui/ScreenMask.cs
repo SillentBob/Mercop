@@ -1,5 +1,8 @@
 using UnityEngine;
 
-public class ScreenMask : MonoBehaviour
+namespace Ui
 {
+    public class ScreenMask : MonoBehaviour
+    {
+    }
 }

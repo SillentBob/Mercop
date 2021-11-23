@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Core
+namespace Ui
 {
-    public class PauseMenu : Singleton<PauseMenu>
+    public class PauseMenu : MonoBehaviour
     {
     }
 }
