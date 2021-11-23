@@ -37,7 +37,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     protected virtual void Awake()
     {
         instance = this as T;
-        DontDestroyOnLoad(instance.gameObject);
+        //DontDestroyOnLoad(instance.gameObject); //Not needed, we use singletons from persistent common scene
         Debug.Log($"{typeof(T)} created.");
     }
 

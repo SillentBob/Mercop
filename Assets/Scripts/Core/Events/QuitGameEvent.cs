@@ -1,6 +1,7 @@
 ﻿namespace Core.Events
 {
-    public class PauseEventType
+    public class QuitGameEvent
     {
+        
     }
 }

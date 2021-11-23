@@ -8,15 +8,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MenuManager : Singleton<MenuManager>
+public class MainMenuManager : Singleton<MainMenuManager>
 {
     // @formatter:off
-    [SerializeField] private string mainMenuSceneName = "MainMenu"; //TODO change to some reference
-    [SerializeField] private SceneMask mask;
-    [SerializeField] private float menuTransitionHalftime = 0.5f;
-    
     [Header("Main Menu")] 
-    [SerializeField] private Transform mainMenuRoot;
+    [SerializeField] private MainMenu mainMenuRoot;
     [SerializeField] private Button quitButton;
     [SerializeField] private Button contractsButton;
     [SerializeField] private TMP_InputField playerNameInput;
@@ -32,17 +28,8 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField] private TextMeshProUGUI contractDesctiption;
     [SerializeField] private TextMeshProUGUI contractRewardMoney;
     [SerializeField] private TextMeshProUGUI contractRewardReputation;
-    
-    [Header("Pause Menu")]
-    [SerializeField] private PauseMenu pauseMenuRoot;
-    [SerializeField] private Button pauseMenuQuitButton;
-    [SerializeField] private Button pauseMenuMainmenuButton;
-    [SerializeField] private Button pauseMenuResumeButton;
-    
     // @formatter:on
 
-    private bool isMenuLocked;
-    private Image maskImage;
     private ToggleGroup contractsToggleGroup;
 
     private const string FORMATTER_TAG_PLAYER = "{PLAYER}";
@@ -50,9 +37,7 @@ public class MenuManager : Singleton<MenuManager>
     protected override void Awake()
     {
         base.Awake();
-        maskImage = mask.GetComponentInChildren<Image>();
         contractsToggleGroup = contractListContainer.GetComponent<ToggleGroup>();
-        EventManager.AddListener(EventTypes.Pause, OnPauseChange);
     }
 
     private void Start()
@@ -61,22 +46,19 @@ public class MenuManager : Singleton<MenuManager>
         RePopulateContractsList();
         ResolvePlayEnabled();
         
-        ShowMainMenu();
+        EnableView(true);
+        ToggleMainMenu();
         SetPlayerName(playerNameInput.text);
     }
 
     private void RegisterMenuButtonEvents()
     {
-        quitButton.onClick.AddListener(MaybeAnimateQuitGame);
+        quitButton.onClick.AddListener(QuitGame);
         playerNameInput.onValueChanged.AddListener(SetPlayerName);
         contractsButton.onClick.AddListener(MaybeAnimateShowContractMenu);
 
         contractsBackButton.onClick.AddListener(MaybeAnimateShowMainMenu);
         contractsPlayButton.onClick.AddListener(LoadSelectedLevel);
-
-        pauseMenuQuitButton.onClick.AddListener(MaybeAnimateQuitGame);
-        pauseMenuMainmenuButton.onClick.AddListener(LoadMainMenu);
-        pauseMenuResumeButton.onClick.AddListener(ResumeGameplay);
     }
 
     private void RePopulateContractsList()
@@ -143,121 +125,45 @@ public class MenuManager : Singleton<MenuManager>
 
     private void MaybeAnimateShowContractMenu()
     {
-        MaybeAnimateShowMenu(ShowContractsMenu);
+        ScreenMaskManager.Instance.MaybeAnimateShowMask(ToggleContractsMenu);
     }
 
     private void MaybeAnimateShowMainMenu()
     {
-        MaybeAnimateShowMenu(ShowMainMenu);
+        ScreenMaskManager.Instance.MaybeAnimateShowMask(ToggleMainMenu);
     }
 
-    private void MaybeAnimateQuitGame()
-    {
-        MaybeAnimateShowMenu(Application.Quit);
-    }
-
-    private void MaybeAnimateShowMenu(Action menuAction)
-    {
-        if (!isMenuLocked)
-        {
-            isMenuLocked = true;
-            TransitionMenu(menuAction, () => isMenuLocked = false);
-        }
-    }
-
-    private void ShowMainMenu()
+    private void ToggleMainMenu()
     {
         mainMenuRoot.gameObject.SetActive(true);
         contractMenuRoot.gameObject.SetActive(false);
     }
-    
-    
 
-    private void ShowContractsMenu()
+    private void ToggleContractsMenu()
     {
         contractMenuRoot.gameObject.SetActive(true);
         mainMenuRoot.gameObject.SetActive(false);
     }
 
-    private void ShowPauseMenu(bool show)
+    private void EnableView(bool enable)
     {
-        pauseMenuRoot.gameObject.SetActive(show);
+        mainMenuRoot.gameObject.SetActive(enable);
     }
-
-    private void TransitionMenu(Action onMaskChangeHalfway, Action onMaskChangeFinish)
+    
+    private void LoadSelectedLevel()
     {
-        AnimateMaskIn(() =>
+        ScreenMaskManager.Instance.MaybeAnimateShowMask(() =>
         {
-            if (onMaskChangeHalfway != null)
-            {
-                onMaskChangeHalfway.Invoke();
-            }
-
-            AnimateMaskOut(onMaskChangeFinish);
+            SceneManager.LoadScene(GameManager.Instance.selectedContract.sceneName, LoadSceneMode.Single); // single??
+            PlayerGuiManager.Instance.ShowGui(true);
+            EnableView(false);
         });
     }
 
-    private void AnimateMaskIn(Action onFinish)
+    private void QuitGame()
     {
-        EnableMaskObject(true);
-        Tweener tweenerIn = DOTween.To(OnChangeAlpha, 0, 1, menuTransitionHalftime);
-        tweenerIn.SetUpdate(true);
-        if (onFinish != null)
-        {
-            tweenerIn.onComplete = onFinish.Invoke;
-        }
-    }
+        EventManager.Invoke(EventTypes.Quit, new QuitGameEvent());
+    }    
 
-    private void AnimateMaskOut(Action onFinish)
-    {
-        Tweener tweenerOut = DOTween.To(OnChangeAlpha, 1, 0, menuTransitionHalftime);
-        tweenerOut.SetUpdate(true);
-        tweenerOut.onComplete = () =>
-        {
-            if (onFinish != null)
-            {
-                onFinish.Invoke();
-            }
-
-            EnableMaskObject(false);
-        };
-    }
-
-    private void EnableMaskObject(bool enable)
-    {
-        mask.gameObject.SetActive(enable);
-    }
-
-    private void OnChangeAlpha(float value)
-    {
-        maskImage.color = new Color(maskImage.color.r, maskImage.color.g, maskImage.color.b, value);
-    }
-
-    private void LoadSelectedLevel()
-    {
-        MaybeAnimateShowMenu(() =>
-            {
-                SceneManager.LoadScene(GameManager.Instance.selectedContract.sceneName, LoadSceneMode.Single); // single??
-                PlayerGuiManager.Instance.ShowGui(true);
-                mainMenuRoot.gameObject.SetActive(false);
-                contractMenuRoot.gameObject.SetActive(false);
-            }
-        );
-    }
-
-    private void LoadMainMenu()
-    {
-        MaybeAnimateShowMenu(() => SceneManager.LoadScene(mainMenuSceneName));
-    }
-
-    private void ResumeGameplay()
-    {
-        EventManager.Invoke(EventTypes.Pause, new PauseEvent(false));
-    }
-
-    private void OnPauseChange(PauseEvent evt)
-    {
-        var show = evt.isPaused;
-        MaybeAnimateShowMenu(() => ShowPauseMenu(show));
-    }
+    
 }

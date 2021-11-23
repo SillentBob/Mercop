@@ -2,8 +2,8 @@
 
 namespace Core
 {
-    public class SceneMask : Singleton<SceneMask>
+    public class MainMenu : MonoBehaviour
     {
-
+        
     }
 }
