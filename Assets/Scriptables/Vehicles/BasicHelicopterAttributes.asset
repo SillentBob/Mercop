@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveMaxSpeed: 10
   moveAcceleration: 20
-  moveForceMode: 0
+  moveForceMode: 1
   rotationAcceleration: 200
   rotationMaxRadiansPerSec: 3
-  rotationForceMode: 0
+  rotationForceMode: 1
   maxHealth: 100
   maxFuel: 500
   strafeSpeed: 1

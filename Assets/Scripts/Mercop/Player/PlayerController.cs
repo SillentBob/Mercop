@@ -18,7 +18,7 @@ namespace Mercop.Player
         {
             rigidbody.AddRelativeTorque(0,
                 input.y * GameManager.Instance.playerSettings.selectedVehicle.rotationAcceleration, 0,
-                ForceMode.Impulse);
+                GameManager.Instance.playerSettings.selectedVehicle.rotationForceMode);
         }
 
         public void Move(Vector3 input)
@@ -27,7 +27,8 @@ namespace Mercop.Player
             {
                 Vector3 fowardSpeed =
                     new Vector3(0, 0, input.y * GameManager.Instance.playerSettings.selectedVehicle.moveAcceleration);
-                rigidbody.AddRelativeForce(fowardSpeed, ForceMode.Impulse);
+                rigidbody.AddRelativeForce(fowardSpeed,
+                    GameManager.Instance.playerSettings.selectedVehicle.moveForceMode);
             }
         }
     }
