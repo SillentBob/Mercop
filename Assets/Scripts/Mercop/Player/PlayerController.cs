@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace Mercop.Player
 {
+    //TODO save selectedVehicle values here and read in rotate and move for FPS optimisations later.(rotate,move)
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private Transform rootTransform;
-        [SerializeField] private Rigidbody rigidbody;
+        [SerializeField] private new Rigidbody rigidbody;
 
         private void Awake()
         {
-            //TODO save selectedVehicle values here and read in rotate and move for FPS optimisations later.(rotate,move)
             rigidbody.maxAngularVelocity = GameManager.Instance.playerSettings.selectedVehicle.rotationMaxRadiansPerSec;
         }
 
@@ -25,9 +25,9 @@ namespace Mercop.Player
         {
             if (rigidbody.velocity.magnitude < GameManager.Instance.playerSettings.selectedVehicle.moveMaxSpeed)
             {
-                Vector3 fowardSpeed =
+                Vector3 forwardSpeed =
                     new Vector3(0, 0, input.y * GameManager.Instance.playerSettings.selectedVehicle.moveAcceleration);
-                rigidbody.AddRelativeForce(fowardSpeed,
+                rigidbody.AddRelativeForce(forwardSpeed,
                     GameManager.Instance.playerSettings.selectedVehicle.moveForceMode);
             }
         }
