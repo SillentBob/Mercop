@@ -16,7 +16,7 @@ namespace Mercop.Core
         protected override void Awake()
         {
             base.Awake();
-            EventManager.AddListener(EventTypes.LoadScene, OnLoadRequest);
+            EventManager.AddListener<LoadSceneEvent>(OnLoadRequest);
         }
 
         private void Start()

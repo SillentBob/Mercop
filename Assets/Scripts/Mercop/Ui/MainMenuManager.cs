@@ -159,8 +159,7 @@ namespace Mercop.Ui
         {
             ScreenMaskManager.Instance.MaybeAnimateShowMask(() =>
             {
-                EventManager.Invoke(EventTypes.LoadScene,
-                    evt: new LoadSceneEvent(GameManager.Instance.selectedContract.sceneName, false, true, true));
+                EventManager.Invoke( new LoadSceneEvent(GameManager.Instance.selectedContract.sceneName, false, true, true));
                 PlayerGuiManager.Instance.ShowGui(true);
                 EnableView(false);
             });
@@ -168,7 +167,7 @@ namespace Mercop.Ui
 
         private void QuitGame()
         {
-            EventManager.Invoke(EventTypes.Quit, new QuitGameEvent());
+            EventManager.Invoke(new QuitGameEvent());
         }
     }
 }

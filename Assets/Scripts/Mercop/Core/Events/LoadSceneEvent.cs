@@ -1,6 +1,6 @@
 ﻿namespace Mercop.Core.Events
 {
-    public class LoadSceneEvent
+    public class LoadSceneEvent : BaseEvent
     {
         public string sceneName;
         public bool isMainMenu;

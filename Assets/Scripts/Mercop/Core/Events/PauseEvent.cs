@@ -1,6 +1,6 @@
 ﻿namespace Mercop.Core.Events
 {
-    public class PauseEvent
+    public class PauseEvent : BaseEvent
     {
         public bool isPaused;
 

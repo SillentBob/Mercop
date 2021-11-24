@@ -19,7 +19,7 @@ namespace Mercop.Ui
         {
             base.Awake();
             RegisterMenuButtonEvents();
-            EventManager.AddListener(EventTypes.Pause, OnPauseChange);
+            EventManager.AddListener<PauseEvent>(OnPauseChange);
         }
 
         private void RegisterMenuButtonEvents()
@@ -31,7 +31,7 @@ namespace Mercop.Ui
 
         private void QuitGame()
         {
-            EventManager.Invoke(EventTypes.Quit, new QuitGameEvent());
+            EventManager.Invoke(new QuitGameEvent());
         }
 
         private void ResumeGameplay(bool animateMask = true)
@@ -39,7 +39,7 @@ namespace Mercop.Ui
             Action resumeAction = () =>
             {
                 ShowPauseMenu(false);
-                EventManager.Invoke(EventTypes.Pause, evt: new PauseEvent(false));
+                EventManager.Invoke(new PauseEvent(false));
             };
 
             if (animateMask)
@@ -70,7 +70,7 @@ namespace Mercop.Ui
             ScreenMaskManager.Instance.MaybeAnimateShowMask(() =>
             {
                 ResumeGameplay(false);
-                EventManager.Invoke(EventTypes.LoadScene, evt: new LoadSceneEvent(null, true, true, false));
+                EventManager.Invoke(new LoadSceneEvent(null, true, true, false));
             });
         }
     }

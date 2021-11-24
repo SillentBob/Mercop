@@ -32,8 +32,8 @@ namespace Mercop.Core
         protected override void Awake()
         {
             base.Awake();
-            EventManager.AddListener(EventTypes.Pause, OnPauseChange);
-            EventManager.AddListener(EventTypes.Quit, OnGameQuit);
+            EventManager.AddListener<PauseEvent>(OnPauseChange);
+            EventManager.AddListener<QuitGameEvent>(OnGameQuit);
             SetGameFpsSettings(useVsync, limitFps, maxFps);
         }
 
@@ -42,9 +42,9 @@ namespace Mercop.Core
             return allContracts.Where(m => !m.completed).ToList();
         }
 
-        private void OnPauseChange(PauseEvent evt)
+        private void OnPauseChange(BaseEvent evt)
         {
-            isGamePaused = evt.isPaused;
+            //isGamePaused = evt.isPaused;
             if (isGamePaused)
             {
                 Time.timeScale = 0;

@@ -1,6 +1,6 @@
 ﻿namespace Mercop.Core.Events
 {
-    public class QuitGameEvent
+    public class QuitGameEvent : BaseEvent
     {
         
     }

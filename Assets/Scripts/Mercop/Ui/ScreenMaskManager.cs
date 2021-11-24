@@ -18,7 +18,7 @@ namespace Mercop.Ui
         protected override void Awake()
         {
             base.Awake();
-            EventManager.AddListener(EventTypes.Quit, OnGameQuit);
+            EventManager.AddListener<QuitGameEvent>(OnGameQuit);
         }
 
         public void MaybeAnimateShowMask(Action onMaskInFinish)

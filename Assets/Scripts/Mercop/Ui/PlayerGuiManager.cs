@@ -29,7 +29,7 @@ namespace Mercop.Ui
         {
             base.Awake();
             pauseButton.onClick.AddListener(() =>
-                EventManager.Invoke(EventTypes.Pause, new PauseEvent(true)));
+                EventManager.Invoke(new PauseEvent(true)));
         }
 
         private void Update()
