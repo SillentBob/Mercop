@@ -46,6 +46,7 @@ namespace Mercop.Core
                 SceneManager.LoadScene(MainMenuSceneName, LoadSceneMode.Additive);
                 loadedScenes.Add(MainMenuSceneName);
                 UnloadSceneAsync(currentGameLevelSceneName);
+                currentGameLevelSceneName = null;
             }
         }
 
@@ -68,7 +69,6 @@ namespace Mercop.Core
                 AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(sceneName);
                 unloadOp.completed += op =>
                 {
-                    Debug.Log($"UnloadSceneAsync finished");
                     loadedScenes.Remove(sceneName);
                     unloadInProgressScenes.Remove(sceneName);
                 };

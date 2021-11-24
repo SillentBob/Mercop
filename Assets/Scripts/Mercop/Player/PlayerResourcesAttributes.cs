@@ -2,7 +2,7 @@
 
 namespace Mercop.Player
 {
-    [CreateAssetMenu(menuName = "Scripatbles/Player/PlayerResourcesAttributes")]
+    [CreateAssetMenu(menuName = "Scriptables/Player/PlayerResourcesAttributes")]
     public class PlayerResourcesAttributes : ScriptableObject
     {
         public int money;

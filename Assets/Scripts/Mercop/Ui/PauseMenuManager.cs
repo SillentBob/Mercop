@@ -1,3 +1,4 @@
+using System;
 using Mercop.Core;
 using Mercop.Core.Events;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace Mercop.Ui
         {
             pauseMenuQuitButton.onClick.AddListener(QuitGame);
             pauseMenuMainmenuButton.onClick.AddListener(LoadMainMenu);
-            pauseMenuResumeButton.onClick.AddListener(ResumeGameplay);
+            pauseMenuResumeButton.onClick.AddListener(() => ResumeGameplay());
         }
 
         private void QuitGame()
@@ -33,9 +34,22 @@ namespace Mercop.Ui
             EventManager.Invoke(EventTypes.Quit, new QuitGameEvent());
         }
 
-        private void ResumeGameplay()
+        private void ResumeGameplay(bool animateMask = true)
         {
-            EventManager.Invoke(EventTypes.Pause, evt: new PauseEvent(false));
+            Action resumeAction = () =>
+            {
+                ShowPauseMenu(false);
+                EventManager.Invoke(EventTypes.Pause, evt: new PauseEvent(false));
+            };
+
+            if (animateMask)
+            {
+                ScreenMaskManager.Instance.MaybeAnimateShowMask(resumeAction.Invoke);
+            }
+            else
+            {
+                resumeAction.Invoke();
+            }
         }
 
         private void OnPauseChange(PauseEvent evt)
@@ -55,8 +69,7 @@ namespace Mercop.Ui
         {
             ScreenMaskManager.Instance.MaybeAnimateShowMask(() =>
             {
-                ShowPauseMenu(false);
-                ResumeGameplay();
+                ResumeGameplay(false);
                 EventManager.Invoke(EventTypes.LoadScene, evt: new LoadSceneEvent(null, true, true, false));
             });
         }

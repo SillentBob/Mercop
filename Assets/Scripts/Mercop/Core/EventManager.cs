@@ -9,11 +9,13 @@ namespace Mercop.Core
     {
         private static Dictionary<PauseEventType, Action<PauseEvent>> pauseEvents =
             new Dictionary<PauseEventType, Action<PauseEvent>>();
+
         private static Dictionary<QuitGameEventType, Action<QuitGameEvent>> quitEvents =
             new Dictionary<QuitGameEventType, Action<QuitGameEvent>>();
+
         private static Dictionary<LoadSceneEventType, Action<LoadSceneEvent>> loadSceneEvents =
             new Dictionary<LoadSceneEventType, Action<LoadSceneEvent>>();
-        
+
         public static void AddListener(PauseEventType eventType, Action<PauseEvent> onEventAction)
         {
             if (!pauseEvents.ContainsKey(eventType))
@@ -33,7 +35,7 @@ namespace Mercop.Core
                 pauseEvents[eventType].Invoke(evt);
             }
         }
-        
+
         public static void AddListener(QuitGameEventType eventType, Action<QuitGameEvent> onEventAction)
         {
             if (!quitEvents.ContainsKey(eventType))
@@ -53,7 +55,7 @@ namespace Mercop.Core
                 quitEvents[eventType].Invoke(evt);
             }
         }
-        
+
         public static void AddListener(LoadSceneEventType eventType, Action<LoadSceneEvent> onEventAction)
         {
             if (!loadSceneEvents.ContainsKey(eventType))
@@ -81,5 +83,4 @@ namespace Mercop.Core
         public static readonly QuitGameEventType Quit = new QuitGameEventType();
         public static readonly LoadSceneEventType LoadScene = new LoadSceneEventType();
     }
-    
 }

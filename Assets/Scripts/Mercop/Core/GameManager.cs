@@ -10,26 +10,38 @@ namespace Mercop.Core
 {
     public class GameManager : Singleton<GameManager>
     {
+        // @formatter:off
         [SerializeField] private float quitGameDelay = 0.5f;
         [SerializeField] private List<MissionContractAttributes> allContracts;
         public MissionContractAttributes selectedContract;
         public PlayerSettingsAttributes playerSettings;
         public PlayerResourcesAttributes playerResources;
+        [Header("FPS")]
+        [SerializeField] private bool limitFps;
+        [SerializeField, Range(10,120)] private int maxFps = 60;
+        [SerializeField] private bool useVsync;
+        // @formatter:on
 
         private bool isGamePaused;
+#if UNITY_EDITOR
+        private bool lastLimitFps;
+        private int lastMaxFps;
+        private bool lastUseVsync;
+#endif
 
         protected override void Awake()
         {
             base.Awake();
             EventManager.AddListener(EventTypes.Pause, OnPauseChange);
             EventManager.AddListener(EventTypes.Quit, OnGameQuit);
+            SetGameFpsSettings(useVsync, limitFps, maxFps);
         }
 
         public List<MissionContractAttributes> getAvailableContracts()
         {
-            return allContracts.Where(m => !m.completed).ToList();;
+            return allContracts.Where(m => !m.completed).ToList();
         }
-    
+
         private void OnPauseChange(PauseEvent evt)
         {
             isGamePaused = evt.isPaused;
@@ -53,6 +65,52 @@ namespace Mercop.Core
             Debug.Log("Application.Quit()");
             yield return new WaitForSeconds(quitGameDelay);
             Application.Quit();
+        }
+
+        private void OnValidate()
+        {
+            if (lastLimitFps != limitFps)
+            {
+                lastLimitFps = limitFps;
+                if (lastLimitFps)
+                {
+                    lastUseVsync = useVsync = false;
+                    SetGameFpsSettings(false, true, maxFps);
+                }
+            }
+
+            if (lastUseVsync != useVsync)
+            {
+                lastUseVsync = useVsync;
+                if (lastUseVsync)
+                {
+                    lastLimitFps = limitFps = false;
+                    SetGameFpsSettings(true, false, maxFps);
+                }
+            }
+
+            if (lastMaxFps != maxFps)
+            {
+                lastMaxFps = maxFps;
+                SetGameFpsSettings(useVsync, limitFps, maxFps);
+            }
+        }
+
+        private void SetGameFpsSettings(bool useVsyncVal, bool useFpsLimitVal, int maxFpsVal)
+        {
+            if (useFpsLimitVal)
+            {
+                useVsync = false;
+                limitFps = true;
+            }
+            else if (useVsyncVal)
+            {
+                limitFps = false;
+                useVsync = true;
+            }
+
+            QualitySettings.vSyncCount = useVsync ? 1 : 0;
+            Application.targetFrameRate = limitFps && !useVsync ? maxFpsVal : -1;
         }
     }
 }
