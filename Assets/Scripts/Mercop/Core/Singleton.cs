@@ -26,10 +26,10 @@ namespace Mercop.Core
                 }
                 return instance;
             }
-            set
-            {
-                instance = value;
-            }
+            // set
+            // {
+            //     instance = value;
+            // }
         }
 
         #endregion

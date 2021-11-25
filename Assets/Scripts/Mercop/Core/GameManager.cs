@@ -42,9 +42,9 @@ namespace Mercop.Core
             return allContracts.Where(m => !m.completed).ToList();
         }
 
-        private void OnPauseChange(BaseEvent evt)
+        private void OnPauseChange(PauseEvent evt)
         {
-            //isGamePaused = evt.isPaused;
+            isGamePaused = evt.isPaused;
             if (isGamePaused)
             {
                 Time.timeScale = 0;

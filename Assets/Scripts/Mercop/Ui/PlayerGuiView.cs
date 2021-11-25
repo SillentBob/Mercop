@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Mercop.Ui
 {
-    public class PlayerGuiManager : Singleton<PlayerGuiManager>
+    public class PlayerGuiView : View
     {
         // @formatter:off
         [Header("Player GUI")]
@@ -14,7 +14,7 @@ namespace Mercop.Ui
         [SerializeField] private Image crosshairIcon;
         [SerializeField] private PlayerGui playerGuiRoot;
         
-        [Header("FPS Display")]
+        [Header("FPS Gui Display")]
         [SerializeField] private bool showFps;
         [SerializeField] private TextMeshProUGUI fpsText;
         // @formatter:on
@@ -25,11 +25,9 @@ namespace Mercop.Ui
         private bool lastShowFps;
 #endif
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
-            pauseButton.onClick.AddListener(() =>
-                EventManager.Invoke(new PauseEvent(true)));
+            pauseButton.onClick.AddListener(OnPauseClick );
         }
 
         private void Update()
@@ -57,9 +55,15 @@ namespace Mercop.Ui
             return new Vector3(xPos, yPos, 0);
         }
 
-        public void ShowGui(bool show)
+        private void ShowGui(bool show)
         {
             playerGuiRoot.gameObject.SetActive(show);
+        }
+
+        private void OnPauseClick()
+        {
+            EventManager.Invoke(new PauseEvent(true));
+            ViewManager.Instance.ShowView<PauseMenuView>();
         }
 
         private void OnValidate()
@@ -72,6 +76,16 @@ namespace Mercop.Ui
                     fpsText.enabled = lastShowFps;
                 }
             }
+        }
+
+        public override void OnShow()
+        {
+            ShowGui(true);
+        }
+
+        public override void OnHide()
+        {
+            ShowGui(false);
         }
     }
 }

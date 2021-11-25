@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Mercop.Core.Events;
+using Mercop.Ui;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,8 +8,6 @@ namespace Mercop.Core
 {
     public class SceneLoader : Singleton<SceneLoader>
     {
-        [SerializeField] private string MainMenuSceneName = "MainMenu";
-
         private List<string> loadedScenes = new List<string>();
         private List<string> unloadInProgressScenes = new List<string>();
         private string currentGameLevelSceneName;
@@ -21,7 +20,7 @@ namespace Mercop.Core
 
         private void Start()
         {
-            LoadMainMenu();
+            ShowMainMenu();
         }
 
         private void OnLoadRequest(LoadSceneEvent evt)
@@ -30,7 +29,7 @@ namespace Mercop.Core
             {
                 if (evt.isMainMenu)
                 {
-                    LoadMainMenu();
+                    ShowMainMenu();
                 }
                 else
                 {
@@ -39,12 +38,12 @@ namespace Mercop.Core
             }
         }
 
-        private void LoadMainMenu()
+        private void ShowMainMenu()
         {
-            if (!loadedScenes.Contains(MainMenuSceneName))
+            Debug.Log("ShowMainMenu");
+            ViewManager.Instance.ShowView<MainMenuView>();
+            if (loadedScenes.Contains(currentGameLevelSceneName))
             {
-                SceneManager.LoadScene(MainMenuSceneName, LoadSceneMode.Additive);
-                loadedScenes.Add(MainMenuSceneName);
                 UnloadSceneAsync(currentGameLevelSceneName);
                 currentGameLevelSceneName = null;
             }
@@ -57,7 +56,6 @@ namespace Mercop.Core
                 SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
                 loadedScenes.Add(sceneName);
                 currentGameLevelSceneName = sceneName;
-                UnloadSceneAsync(MainMenuSceneName);
             }
         }
 

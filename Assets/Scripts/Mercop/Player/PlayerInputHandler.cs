@@ -81,7 +81,7 @@ namespace Mercop.Player
 
         private void MoveCrosshair(Vector2 input)
         {
-            PlayerGuiManager.Instance.MoveCrosshair(input, crosshairMoveSensitivity, crosshairMoveRange);
+            //PlayerGuiView.Instance.MoveCrosshair(input, crosshairMoveSensitivity, crosshairMoveRange);
         }
 
         private void RegisterKeysToFunctions()

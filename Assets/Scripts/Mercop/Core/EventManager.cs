@@ -7,7 +7,8 @@ namespace Mercop.Core
 {
     public class EventManager : MonoBehaviour
     {
-        private static Dictionary<Type, Action<object>> eventDelegates = new Dictionary<Type, Action<object>>();
+        private static readonly Dictionary<Type, Action<object>>
+            eventDelegates = new Dictionary<Type, Action<object>>();
 
         public static void AddListener<T>(Action<T> onActionDelegate) where T : BaseEvent
         {
