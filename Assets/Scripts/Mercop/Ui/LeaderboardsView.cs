@@ -2,22 +2,24 @@ using System.Collections.Generic;
 using Mercop.Core;
 using Mercop.Ui;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class LeaderboardsView : View
 {
+    // @formatter:off
     [SerializeField] private Leaderboards leaderboardsRoot;
+     [SerializeField] private ScrollRect scrollList;
+    [SerializeField] private RectTransform rowsContentContainer;
+    [SerializeField] private RectTransform rowsContentAnchor;
+    [SerializeField] private RectTransform contentRowPrefab;
+    [SerializeField] private Button backButton;
+    
     [SerializeField] private int rowsCount = 100;
     [SerializeField] private int visibleCount = 10;
-    [FormerlySerializedAs("contentContainer")] [SerializeField]
-    private RectTransform rowsContentContainer;
-    [FormerlySerializedAs("contentAnchor")] [SerializeField]
-    private RectTransform rowsContentAnchor;
-    [SerializeField] private RectTransform contentRowPrefab;
-    [SerializeField] private ScrollRect scrollList;
-    [SerializeField] private Button backButton;
+    // @formatter:on
 
+    private int rowsBufferTop = 2;
+    private int rowsBufferBottom = 2;
     private float rowHeight;
     private float lastViewPosition;
     private List<RectTransform> rows;
@@ -31,12 +33,14 @@ public class LeaderboardsView : View
 
     private void SetupList()
     {
-        var visibleRowsCountWithBuffer = visibleCount + 2;
+        var visibleRowsCountWithBuffer = visibleCount + rowsBufferTop + rowsBufferBottom;
         rows = new List<RectTransform>(visibleRowsCountWithBuffer);
-        rowHeight = contentRowPrefab.rect.size.y;
+        rowHeight = Mathf.Abs(rowsContentContainer.sizeDelta.y / visibleCount);
+        Debug.Log($"RD {rowsContentContainer.sizeDelta} RS {rowsContentContainer.rect.size.y}");
         rowsContentAnchor.sizeDelta = new Vector2(rowsContentAnchor.rect.size.x, rowsCount * rowHeight);
 
-        for (int i = -1; i < visibleRowsCountWithBuffer-1; i++) //+2 extra, above and below for smooth pooling
+        // extra, above and below for smooth looks
+        for (int i = -rowsBufferTop; i < visibleRowsCountWithBuffer - rowsBufferTop; i++)
         {
             RectTransform row = Instantiate(contentRowPrefab, rowsContentAnchor);
             row.anchoredPosition = new Vector2(0, -i * rowHeight);
@@ -56,15 +60,15 @@ public class LeaderboardsView : View
         backButton.onClick.AddListener(ViewManager.Instance.PreviousView);
     }
 
-    private void OnScroll(Vector2 deltaPosition)
+    private void OnScroll(Vector2 delta)
     {
         var pixelsScrolled = rowsContentContainer.localPosition.y;
-        if (lastViewPosition + rowHeight < pixelsScrolled)
+        while (lastViewPosition + rowHeight < pixelsScrolled)
         {
             MoveTopOffscreenRowToBottom();
         }
 
-        if (lastViewPosition - rowHeight > pixelsScrolled)
+        while (lastViewPosition - rowHeight > pixelsScrolled)
         {
             MoveBottomOffscreenRowToTop();
         }
@@ -83,14 +87,16 @@ public class LeaderboardsView : View
         MoveItemAtIndexTo(0, rows.Count - 1);
         row.transform.SetSiblingIndex(rows.Count);
     }
-    
+
     private void MoveBottomOffscreenRowToTop()
     {
         var row = rows[rows.Count - 1];
-        var currentY = row.anchoredPosition.y;
-        var currentX = row.anchoredPosition.x;
+        var anchoredPosition = row.anchoredPosition;
+        var currentY = anchoredPosition.y;
+        var currentX = anchoredPosition.x;
         var newAnchoredPos = new Vector2(currentX, currentY + (rows.Count * rowHeight));
-        row.anchoredPosition = newAnchoredPos;
+        anchoredPosition = newAnchoredPos;
+        row.anchoredPosition = anchoredPosition;
         lastViewPosition -= rowHeight;
         MoveItemAtIndexTo(rows.Count - 1, 0);
         row.transform.SetSiblingIndex(0);
@@ -98,7 +104,6 @@ public class LeaderboardsView : View
 
     private void UpdateMovedRowValues(RectTransform row)
     {
-        
     }
 
     private void MoveItemAtIndexTo(int from, int to)
@@ -115,7 +120,6 @@ public class LeaderboardsView : View
 
     public override void OnShow()
     {
-        Debug.Log("LB onshow");
         EnableMenu(true);
     }
 

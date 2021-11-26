@@ -2567,8 +2567,8 @@ MonoBehaviour:
   leaderboardsRoot: {fileID: 1529336118}
   rowsCount: 100
   visibleCount: 10
-  contentContainer: {fileID: 985130038}
-  contentAnchor: {fileID: 682484091}
+  rowsContentContainer: {fileID: 985130038}
+  rowsContentAnchor: {fileID: 682484091}
   contentRowPrefab: {fileID: 1673726320019145192, guid: 7147c7fafd937294faca699bb2218f02,
     type: 3}
   scrollList: {fileID: 2107887498}
@@ -3202,7 +3202,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &985130039
@@ -6453,7 +6453,7 @@ GameObject:
   - component: {fileID: 1719047039}
   - component: {fileID: 1719047038}
   m_Layer: 5
-  m_Name: ContractListBackground
+  m_Name: LeaderboardsListBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6475,7 +6475,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10, y: -7.500122}
+  m_AnchoredPosition: {x: -10, y: -7.5004883}
   m_SizeDelta: {x: 60, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1719047038
@@ -8358,7 +8358,7 @@ GameObject:
   - component: {fileID: 2107887497}
   - component: {fileID: 2107887498}
   m_Layer: 5
-  m_Name: ContractListScroll
+  m_Name: LeaderboardsScroll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8421,7 +8421,7 @@ MonoBehaviour:
   m_VerticalScrollbar: {fileID: 1226903362}
   m_HorizontalScrollbarVisibility: 2
   m_VerticalScrollbarVisibility: 2
-  m_HorizontalScrollbarSpacing: 5
+  m_HorizontalScrollbarSpacing: 0
   m_VerticalScrollbarSpacing: 0
   m_OnValueChanged:
     m_PersistentCalls:
