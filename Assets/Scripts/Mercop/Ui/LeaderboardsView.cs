@@ -8,12 +8,10 @@ public class LeaderboardsView : View
 {
     // @formatter:off
     [SerializeField] private Leaderboards leaderboardsRoot;
-     [SerializeField] private ScrollRect scrollList;
-    [SerializeField] private RectTransform rowsContentContainer;
-    [SerializeField] private RectTransform rowsContentAnchor;
+    [SerializeField] private RectTransform list;
+    [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private RectTransform contentRowPrefab;
     [SerializeField] private Button backButton;
-    
     [SerializeField] private int rowsCount = 100;
     [SerializeField] private int visibleCount = 10;
     // @formatter:on
@@ -23,36 +21,17 @@ public class LeaderboardsView : View
     private float rowHeight;
     private float lastViewPosition;
     private List<RectTransform> rows;
+    private bool scrollListUpdated;
 
     private void Awake()
     {
-        SetupList();
         RegisterScrollEvents();
         RegisterButtonEvents();
     }
 
-    private void SetupList()
-    {
-        var visibleRowsCountWithBuffer = visibleCount + rowsBufferTop + rowsBufferBottom;
-        rows = new List<RectTransform>(visibleRowsCountWithBuffer);
-        rowHeight = Mathf.Abs(rowsContentContainer.sizeDelta.y / visibleCount);
-        Debug.Log($"RD {rowsContentContainer.sizeDelta} RS {rowsContentContainer.rect.size.y}");
-        rowsContentAnchor.sizeDelta = new Vector2(rowsContentAnchor.rect.size.x, rowsCount * rowHeight);
-
-        // extra, above and below for smooth looks
-        for (int i = -rowsBufferTop; i < visibleRowsCountWithBuffer - rowsBufferTop; i++)
-        {
-            RectTransform row = Instantiate(contentRowPrefab, rowsContentAnchor);
-            row.anchoredPosition = new Vector2(0, -i * rowHeight);
-            rows.Add(row);
-        }
-
-        lastViewPosition = 0;
-    }
-
     private void RegisterScrollEvents()
     {
-        scrollList.onValueChanged.AddListener(OnScroll);
+        scrollRect.onValueChanged.AddListener(OnScroll);
     }
 
     private void RegisterButtonEvents()
@@ -62,7 +41,8 @@ public class LeaderboardsView : View
 
     private void OnScroll(Vector2 delta)
     {
-        var pixelsScrolled = rowsContentContainer.localPosition.y;
+        var pixelsScrolled = scrollRect.content.localPosition.y;
+        
         while (lastViewPosition + rowHeight < pixelsScrolled)
         {
             MoveTopOffscreenRowToBottom();
@@ -118,9 +98,42 @@ public class LeaderboardsView : View
         leaderboardsRoot.gameObject.SetActive(enable);
     }
 
+    /// <summary>
+    /// This is mandatory becouse UI problems - must be called after scrollList was enabled
+    /// </summary>
+    private void BuildScrollListContentOnce()
+    {
+        if (!scrollListUpdated)
+        {
+            RebuildScrollListContent();
+            scrollListUpdated = true;
+        }
+    }
+
+    private void RebuildScrollListContent()
+    {
+        var visibleRowsCountWithBuffer = visibleCount + rowsBufferTop + rowsBufferBottom;
+        rows = new List<RectTransform>(visibleRowsCountWithBuffer);
+
+        rowHeight = list.rect.height / visibleCount;
+        scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, rowHeight * rowsCount);
+
+        // extra, above and below for smooth looks
+        for (int i = -rowsBufferTop; i < visibleRowsCountWithBuffer - rowsBufferTop; i++)
+        {
+            RectTransform row = Instantiate(contentRowPrefab, scrollRect.content);
+            row.sizeDelta = new Vector2(row.sizeDelta.x, rowHeight);
+            row.anchoredPosition = new Vector2(0, -i * rowHeight);
+            rows.Add(row);
+        }
+
+        lastViewPosition = 0;
+    }
+
     public override void OnShow()
     {
         EnableMenu(true);
+        BuildScrollListContentOnce();
     }
 
     public override void OnHide()
