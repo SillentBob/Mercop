@@ -16,5 +16,7 @@ namespace Mercop.Vehicle
 
         [Range(1, 1000)] public float maxHealth = 100;
         [Range(1, 1000)] public float maxFuel = 500;
+
+        public EngineAttributes engineAttributes;
     }
 }

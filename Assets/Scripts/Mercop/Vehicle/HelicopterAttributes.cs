@@ -6,5 +6,6 @@ namespace Mercop.Vehicle
     public class HelicopterAttributes : VehicleAttribtes
     {
         [Range(1, 100)] public float strafeSpeed = 1;
+        [Range(1, 100)] public float maxLiftHeight = 5;
     }
 }

@@ -33,6 +33,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Dpad"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""EngineStart"",
+                    ""type"": ""Button"",
+                    ""id"": ""bb7b5a5a-7452-4e40-87cf-c0aa3f5da5f1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""EngineStop"",
+                    ""type"": ""Button"",
+                    ""id"": ""fdd634c9-99f2-44c6-9c90-03e25aac3de3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -167,6 +183,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""af97e978-776d-4f6a-a77a-85d9ab65f4b1"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mobile;Keyboard"",
+                    ""action"": ""EngineStart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8551e64-f23b-4a47-b22d-e5cf3c7d1080"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mobile;Keyboard"",
+                    ""action"": ""EngineStop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -188,6 +226,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
+        m_Player_EngineStart = m_Player.FindAction("EngineStart", throwIfNotFound: true);
+        m_Player_EngineStop = m_Player.FindAction("EngineStop", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -239,12 +279,16 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Aim;
+    private readonly InputAction m_Player_EngineStart;
+    private readonly InputAction m_Player_EngineStop;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Aim => m_Wrapper.m_Player_Aim;
+        public InputAction @EngineStart => m_Wrapper.m_Player_EngineStart;
+        public InputAction @EngineStop => m_Wrapper.m_Player_EngineStop;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -260,6 +304,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Aim.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
                 @Aim.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
                 @Aim.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
+                @EngineStart.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEngineStart;
+                @EngineStart.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEngineStart;
+                @EngineStart.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEngineStart;
+                @EngineStop.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEngineStop;
+                @EngineStop.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEngineStop;
+                @EngineStop.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEngineStop;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -270,6 +320,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Aim.started += instance.OnAim;
                 @Aim.performed += instance.OnAim;
                 @Aim.canceled += instance.OnAim;
+                @EngineStart.started += instance.OnEngineStart;
+                @EngineStart.performed += instance.OnEngineStart;
+                @EngineStart.canceled += instance.OnEngineStart;
+                @EngineStop.started += instance.OnEngineStop;
+                @EngineStop.performed += instance.OnEngineStop;
+                @EngineStop.canceled += instance.OnEngineStop;
             }
         }
     }
@@ -296,5 +352,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
+        void OnEngineStart(InputAction.CallbackContext context);
+        void OnEngineStop(InputAction.CallbackContext context);
     }
 }

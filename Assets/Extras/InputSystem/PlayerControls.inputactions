@@ -20,6 +20,22 @@
                     "expectedControlType": "Dpad",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "EngineStart",
+                    "type": "Button",
+                    "id": "bb7b5a5a-7452-4e40-87cf-c0aa3f5da5f1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "EngineStop",
+                    "type": "Button",
+                    "id": "fdd634c9-99f2-44c6-9c90-03e25aac3de3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -154,6 +170,28 @@
                     "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "af97e978-776d-4f6a-a77a-85d9ab65f4b1",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mobile;Keyboard",
+                    "action": "EngineStart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8551e64-f23b-4a47-b22d-e5cf3c7d1080",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mobile;Keyboard",
+                    "action": "EngineStop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

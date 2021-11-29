@@ -20,4 +20,5 @@ MonoBehaviour:
   rotationForceMode: 1
   maxHealth: 100
   maxFuel: 500
+  engineAttributes: {fileID: 11400000, guid: 78b5a195374532644b1670df1dd68199, type: 2}
   strafeSpeed: 1

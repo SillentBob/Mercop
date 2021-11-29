@@ -6,13 +6,15 @@ using UnityEngine.UI;
 
 namespace Mercop.Ui
 {
-    public class PlayerGuiView : View
+    public class PlayerGuiView : SingletonView<PlayerGuiView>
     {
         // @formatter:off
         [Header("Player GUI")]
         [SerializeField] private Button pauseButton;
         [SerializeField] private Image crosshairIcon;
         [SerializeField] private PlayerGui playerGuiRoot;
+        [SerializeField] private Button engineStartButton;
+        [SerializeField] private Button engineStopButton;
         
         [Header("FPS Gui Display")]
         [SerializeField] private bool showFps;
@@ -25,9 +27,12 @@ namespace Mercop.Ui
         private bool lastShowFps;
 #endif
 
-        protected void Awake()
+        protected override void Awake()
         {
-            pauseButton.onClick.AddListener(OnPauseClick );
+            base.Awake();
+            RegisterButtonListeners();
+            RegisterEventListeners();
+            SetupButtons();
         }
 
         private void Update()
@@ -38,6 +43,52 @@ namespace Mercop.Ui
                 var fps = 1.0f / fpsDeltaTime;
                 fpsText.SetText(Mathf.Ceil(fps).ToString());
             }
+        }
+
+        private void RegisterButtonListeners()
+        {
+            pauseButton.onClick.AddListener(OnPauseClick);
+        }
+
+        private void RegisterEventListeners()
+        {
+            EventManager.AddListener<EngineEvent>(OnEngineEvent);
+        }
+
+        private void SetupButtons()
+        {
+            engineStartButton.interactable = true;
+            engineStopButton.interactable = false;
+        }
+        
+        private void OnEngineEvent(EngineEvent evt)
+        {
+            switch (evt.engineEventType)
+            {
+                case EngineEvent.EngineEventType.StartBegin:
+                    engineStartButton.interactable = false;
+                    engineStopButton.interactable = false;
+                    break;
+                case EngineEvent.EngineEventType.StartFinished:
+                    engineStartButton.interactable = false;
+                    engineStopButton.interactable = true;
+                    break;
+                case EngineEvent.EngineEventType.StopBegin:
+                    engineStartButton.interactable = false;
+                    engineStopButton.interactable = false;
+                    break;
+                case EngineEvent.EngineEventType.StopFinish:
+                    engineStartButton.interactable = true;
+                    engineStopButton.interactable = false;
+                    break;
+            }
+        }
+
+        private void OnEngineStopBegin()
+        {
+            EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StopBegin));
+            engineStartButton.interactable = false;
+            engineStopButton.interactable = false;
         }
 
         public void MoveCrosshair(Vector2 input, Vector2 sensitivity, Vector2 moveRange)

@@ -1,11 +1,19 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Mercop.Core
 {
-    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    public class SingletonView<T> : View where T:View
     {
         private static T instance;
+        
+        public override void OnShow()
+        {
+        }
 
+        public override void OnHide()
+        {
+        }
+        
         public static T Instance
         {
             get
@@ -18,16 +26,14 @@ namespace Mercop.Core
                         instance = new GameObject(typeof(T).ToString()).AddComponent<T>();
                     }
                 }
-
                 return instance;
             }
         }
-
+        
         protected virtual void Awake()
         {
             instance = this as T;
-            //DontDestroyOnLoad(instance.gameObject); //Not needed, we use singletons from persistent common scene
-            Debug.Log($"{typeof(T)} created.");
         }
+        
     }
 }

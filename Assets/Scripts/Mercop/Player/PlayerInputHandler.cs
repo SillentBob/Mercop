@@ -81,7 +81,7 @@ namespace Mercop.Player
 
         private void MoveCrosshair(Vector2 input)
         {
-            //PlayerGuiView.Instance.MoveCrosshair(input, crosshairMoveSensitivity, crosshairMoveRange);
+            PlayerGuiView.Instance.MoveCrosshair(input, crosshairMoveSensitivity, crosshairMoveRange);
         }
 
         private void RegisterKeysToFunctions()
@@ -93,6 +93,9 @@ namespace Mercop.Player
             controls.Player.Aim.performed += OnAim;
             controls.Player.Aim.started += OnAimStart;
             controls.Player.Aim.canceled += OnAimEnd;
+
+            controls.Player.EngineStart.performed += OnEngineStart;
+            controls.Player.EngineStop.performed += OnEngineStop;
         }
 
         private void OnMove(InputAction.CallbackContext ctx)
@@ -124,5 +127,16 @@ namespace Mercop.Player
         {
             isAiming = false;
         }
+        
+        private void OnEngineStart(InputAction.CallbackContext ctx)
+        {
+            playerController.StartEngine();
+        }
+        
+        private void OnEngineStop(InputAction.CallbackContext ctx)
+        {
+            playerController.StopEngine();
+        }
+        
     }
 }
