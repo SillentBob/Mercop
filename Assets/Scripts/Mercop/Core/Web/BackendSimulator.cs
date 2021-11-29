@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Mercop.Core.Web.Data;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -38,11 +39,11 @@ namespace Mercop.Core.Web
 
         private static string GetAuthRequestData(string request)
         {
-            PlayerAuthData data = new PlayerAuthData()
+            PlayerAuthData data = new PlayerAuthData
             {
                 idToken = "IdToken1",
                 refreshToken = "RefreshToken1",
-                user = new PlayerAuthUserData()
+                user = new PlayerAuthUserData
                 {
                     id = "1"
                 }
@@ -77,18 +78,18 @@ namespace Mercop.Core.Web
 
         private static LeaderboardsPlayerData[] GenerateLeaderboardsPlayers()
         {
-            //TODO try load from local save, if not found return newly created
             LeaderboardsPlayerData[] players = new LeaderboardsPlayerData[100];
             for (int i = 0; i < players.Length; i++)
             {
+                var id = i + 1;
                 players[i] = new LeaderboardsPlayerData
                 {
-                    uid = $"uid{i+1}",
-                    name = $"Player{i+1}",
+                    uid = $"uid{id}",
+                    name = $"Player{id}",
                     scores = new LeaderboardsPlayerScores
                     {
-                        current = (players.Length-i) * 10,
-                        past = (players.Length-i) * 10
+                        current = (players.Length - i) * 10,
+                        past = (players.Length - i) * 10
                     }
                 };
             }
@@ -163,7 +164,9 @@ namespace Mercop.Core.Web
             dataStream.Close();
         }
 
-        public static void PrintLeaderboards()
+#if UNITY_EDITOR
+        [MenuItem("Mercop/PrintLeaderboards")]
+        private static void PrintLeaderboards()
         {
             LoadOrGenerateLeaderboards(null);
             LeaderboardsData data = LoadLocalLeaderboards();
@@ -172,11 +175,14 @@ namespace Mercop.Core.Web
                 Debug.Log($"{data.group.players[i].name},{data.group.players[i].scores.current}");
             }
         }
+#endif
 
-        public static void ResetLeaderboards()
+#if UNITY_EDITOR
+        [MenuItem("Mercop/ResetLeaderboards")]
+        private static void ResetLeaderboards()
         {
             LoadOrGenerateLeaderboards(null, true);
         }
-
+#endif
     }
 }

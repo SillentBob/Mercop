@@ -76,7 +76,10 @@ namespace Mercop.Core
 
         public void GetLeaderboards(Action<LeaderboardsData> onLoadFinish)
         {
-            GetPlayerAuthId(pData => { dataProvider.GetLeaderboardsData(null, pData.idToken, onLoadFinish); });
+            GetPlayerAuthId(pData =>
+            {
+                dataProvider.GetLeaderboardsData("PL", pData.idToken, onLoadFinish);
+            });
         }
 
         public void SubmitPlayerScore(Action<bool> onPostFinish)
