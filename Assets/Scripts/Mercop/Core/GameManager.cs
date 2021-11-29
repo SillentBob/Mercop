@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Mercop.Core.Events;
+using Mercop.Core.Web.Data;
 using Mercop.Mission;
 using Mercop.Player;
 using UnityEngine;
@@ -20,7 +22,11 @@ namespace Mercop.Core
         [SerializeField] private bool limitFps;
         [SerializeField, Range(10,120)] private int maxFps = 60;
         [SerializeField] private bool useVsync;
+        [Header("WEB")]
+        [SerializeField] private DataProvider dataProvider;
         // @formatter:on
+
+        private PlayerAuthData assignedPlayerAuthData;
 
         private bool isGamePaused;
 #if UNITY_EDITOR
@@ -65,6 +71,23 @@ namespace Mercop.Core
             Debug.Log("Application.Quit()");
             yield return new WaitForSeconds(quitGameDelay);
             Application.Quit();
+        }
+
+        public void GetLeaderboards(Action<LeaderboardsData> onLoadFinish)
+        {
+            GetPlayerAuthId((pData) => { dataProvider.GetLeaderboardsData(null, pData.idToken, onLoadFinish); });
+        }
+
+        private void GetPlayerAuthId(Action<PlayerAuthData> onGetFinish)
+        {
+            if (assignedPlayerAuthData != null)
+            {
+                onGetFinish(assignedPlayerAuthData);
+            }
+            else
+            {
+                dataProvider.GetPlayerAuthData(onGetFinish);
+            }
         }
 
         private void OnValidate()
