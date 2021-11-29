@@ -27,6 +27,7 @@ namespace Mercop.Core
         // @formatter:on
 
         private PlayerAuthData assignedPlayerAuthData;
+        private int currentPlayerScore;
 
         private bool isGamePaused;
 #if UNITY_EDITOR
@@ -75,7 +76,16 @@ namespace Mercop.Core
 
         public void GetLeaderboards(Action<LeaderboardsData> onLoadFinish)
         {
-            GetPlayerAuthId((pData) => { dataProvider.GetLeaderboardsData(null, pData.idToken, onLoadFinish); });
+            GetPlayerAuthId(pData => { dataProvider.GetLeaderboardsData(null, pData.idToken, onLoadFinish); });
+        }
+
+        public void SubmitPlayerScore(Action<bool> onPostFinish)
+        {
+            GetPlayerAuthId(pData =>
+            {
+                dataProvider.PostPlayerData(pData, "ub", playerSettings.playerName, currentPlayerScore,
+                    onPostFinish);
+            });
         }
 
         private void GetPlayerAuthId(Action<PlayerAuthData> onGetFinish)
@@ -88,6 +98,11 @@ namespace Mercop.Core
             {
                 dataProvider.GetPlayerAuthData(onGetFinish);
             }
+        }
+
+        public void AddPlayerScore(int score)
+        {
+            currentPlayerScore += score;
         }
 
         private void OnValidate()

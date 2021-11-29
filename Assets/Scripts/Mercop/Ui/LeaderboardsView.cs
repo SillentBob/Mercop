@@ -177,7 +177,7 @@ public class LeaderboardsView : View
         {
             rowsViews[rect].PlayerName = players[playerIndex].name;
             rowsViews[rect].Score = players[playerIndex].scores.current;
-            rowsViews[rect].PlaceNumber = playerIndex;
+            rowsViews[rect].PlaceNumber = playerIndex+1;
         }
     }
 
