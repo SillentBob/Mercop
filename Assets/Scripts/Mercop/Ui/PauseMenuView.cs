@@ -1,4 +1,5 @@
 using System;
+using Mercop.Audio;
 using Mercop.Core;
 using Mercop.Core.Events;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace Mercop.Ui
         protected void Awake()
         {
             RegisterMenuButtonEvents();
+            RegisterClickSounds();
         }
 
         private void RegisterMenuButtonEvents()
@@ -25,6 +27,13 @@ namespace Mercop.Ui
             pauseMenuQuitButton.onClick.AddListener(QuitGame);
             pauseMenuMainmenuButton.onClick.AddListener(LoadMainMenu);
             pauseMenuResumeButton.onClick.AddListener(() => ResumeGameplay());
+        }
+        
+        private void RegisterClickSounds()
+        {
+            pauseMenuQuitButton.onClick.AddListener(() => AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
+            pauseMenuMainmenuButton.onClick.AddListener(() => AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
+            pauseMenuResumeButton.onClick.AddListener(() => AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
         }
 
         private void QuitGame()

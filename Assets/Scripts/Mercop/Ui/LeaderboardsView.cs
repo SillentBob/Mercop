@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mercop.Audio;
 using Mercop.Core;
 using Mercop.Core.Web.Data;
 using Mercop.Ui;
@@ -34,6 +35,7 @@ public class LeaderboardsView : View
     {
         RegisterScrollEvents();
         RegisterButtonEvents();
+        RegisterClickSounds();
     }
 
     private void RegisterScrollEvents()
@@ -44,6 +46,11 @@ public class LeaderboardsView : View
     private void RegisterButtonEvents()
     {
         backButton.onClick.AddListener(ViewManager.Instance.PreviousView);
+    }
+    
+    private void RegisterClickSounds()
+    {
+        backButton.onClick.AddListener(()=>AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
     }
 
     private void OnScroll(Vector2 delta)

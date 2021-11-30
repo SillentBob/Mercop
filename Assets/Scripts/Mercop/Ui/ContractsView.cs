@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mercop.Audio;
 using Mercop.Core;
 using Mercop.Core.Events;
 using Mercop.Core.Extensions;
@@ -33,12 +34,19 @@ namespace Mercop.Ui
         {
             contractsToggleGroup = contractListContainer.GetComponent<ToggleGroup>();
             RegisterEventListeners();
+            RegisterClickSounds();
         }
 
         private void RegisterEventListeners()
         {
             contractsBackButton.onClick.AddListener(ViewManager.Instance.PreviousView);
             contractsPlayButton.onClick.AddListener(LoadSelectedLevel);
+        }
+        
+        private void RegisterClickSounds()
+        {
+            contractsBackButton.onClick.AddListener(()=>AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
+            contractsPlayButton.onClick.AddListener(()=>AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
         }
 
         private void ResolvePlayEnabled()

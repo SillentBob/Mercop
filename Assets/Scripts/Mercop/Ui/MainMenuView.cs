@@ -1,4 +1,5 @@
 using System;
+using Mercop.Audio;
 using Mercop.Core;
 using Mercop.Core.Events;
 using TMPro;
@@ -21,6 +22,7 @@ namespace Mercop.Ui
         private void Awake()
         {
             RegisterEventListeners();
+            RegisterClickSounds();
         }
 
         private void Start()
@@ -34,6 +36,13 @@ namespace Mercop.Ui
             playerNameInput.onValueChanged.AddListener(SetPlayerName);
             contractsButton.onClick.AddListener(() => ViewManager.Instance.ShowView<ContractsView>());
             leaderboardsButton.onClick.AddListener(() => ViewManager.Instance.ShowView<LeaderboardsView>());
+        }
+
+        private void RegisterClickSounds()
+        {
+            quitButton.onClick.AddListener(() => AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
+            contractsButton.onClick.AddListener(() => AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
+            leaderboardsButton.onClick.AddListener(() => AudioPlayer.Instance.Play(AudioPlayer.Sound.UiClick));
         }
 
         private void SetPlayerName(String playerName)

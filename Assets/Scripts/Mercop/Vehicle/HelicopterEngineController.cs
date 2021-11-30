@@ -1,5 +1,6 @@
 ﻿using System;
 using DG.Tweening;
+using Mercop.Audio;
 using Mercop.Core;
 using Mercop.Core.Events;
 using UnityEngine;
@@ -39,6 +40,7 @@ namespace Mercop.Vehicle
                 Tweener engineStartTween = DOTween.To(OnEnginePowerIncrease, 0, 1,
                     helicopterEngineAttribtes.startTime);
                 engineStartTween.onComplete += OnEngineStartFinish;
+                AudioPlayer.Instance.Play(AudioPlayer.Sound.Engine);
             }
         }
 
@@ -64,6 +66,7 @@ namespace Mercop.Vehicle
         {
             currentEngineState = EngineState.Stopped;
             EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StopFinish));
+            AudioPlayer.Instance.Play(AudioPlayer.Sound.Engine);
         }
 
 
@@ -74,6 +77,8 @@ namespace Mercop.Vehicle
 
             var liftDelta = Mathf.Lerp(0, 1, (currentEnginePowerPercentage - 0.5f) * 2);
             LiftObject(liftDelta);
+            
+            AudioPlayer.Instance.ChangePitch(AudioPlayer.Sound.Engine, currentEnginePowerPercentage);
         }
 
         private void OnEnginePowerDecrease(float power)
@@ -83,6 +88,8 @@ namespace Mercop.Vehicle
 
             var liftDelta = Mathf.Lerp(0, 1, (currentEnginePowerPercentage - 0.5f) * 2);
             LiftObject(liftDelta);
+            
+            AudioPlayer.Instance.ChangePitch(AudioPlayer.Sound.Engine, currentEnginePowerPercentage);
         }
 
         private void LiftObject(float heightDelta)

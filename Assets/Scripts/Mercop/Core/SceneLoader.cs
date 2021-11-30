@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mercop.Audio;
 using Mercop.Core.Events;
 using Mercop.Ui;
 using UnityEngine;
@@ -56,6 +57,7 @@ namespace Mercop.Core
                 SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
                 loadedScenes.Add(sceneName);
                 currentGameLevelSceneName = sceneName;
+                AudioPlayer.Instance.Play(AudioPlayer.Sound.Music);
             }
         }
 

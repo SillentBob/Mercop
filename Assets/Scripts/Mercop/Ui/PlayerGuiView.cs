@@ -1,3 +1,4 @@
+using Mercop.Audio;
 using Mercop.Core;
 using Mercop.Core.Events;
 using TMPro;
@@ -132,11 +133,13 @@ namespace Mercop.Ui
         public override void OnShow()
         {
             ShowGui(true);
+            AudioPlayer.Instance.Play(AudioPlayer.Sound.Music);
         }
 
         public override void OnHide()
         {
             ShowGui(false);
+            AudioPlayer.Instance.Stop(AudioPlayer.Sound.Music);
         }
     }
 }
