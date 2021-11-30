@@ -7,75 +7,103 @@ namespace Mercop.Vehicle
 {
     public class HelicopterEngineController : EngineController
     {
-        private EngineState currentState;
         [SerializeField] private Transform mainRotor;
         [SerializeField] private Transform backRotor;
-        private float currentEnginePower;
 
+        private float currentEnginePowerPercentage;
         private Animator mainRotorAnimator;
+        private EngineState currentEngineState;
+        private Vector3 objectStartPosition;
+
+        private HelicopterAttributes helicopterVehicleAttribtes;
+        private HelicopterEngineAttributes helicopterEngineAttribtes;
 
         private void Awake()
         {
-            currentState = EngineState.Stopped;
+            //TODO fix this blind casting
+            helicopterVehicleAttribtes = VehicleAttribtes as HelicopterAttributes;
+            helicopterEngineAttribtes = helicopterVehicleAttribtes.engineAttributes as HelicopterEngineAttributes;
+
+            objectStartPosition = movableObjectRootTransform.position;
+            currentEngineState = EngineState.Stopped;
             mainRotorAnimator = mainRotor.gameObject.GetComponent<Animator>();
             mainRotorAnimator.speed = 0;
         }
 
         public override void StartEngine()
         {
-            if (currentState == EngineState.Stopped)
+            if (currentEngineState == EngineState.Stopped)
             {
-                currentState = EngineState.Starting;
+                currentEngineState = EngineState.Starting;
                 EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StartBegin));
-                Tweener engineStartTween = DOTween.To(OnEnginePowerIncrease, 0, Engine.maxPower, Engine.startTime);
+                Tweener engineStartTween = DOTween.To(OnEnginePowerIncrease, 0, 1,
+                    helicopterEngineAttribtes.startTime);
                 engineStartTween.onComplete += OnEngineStartFinish;
             }
         }
-        
+
         private void OnEngineStartFinish()
         {
-            currentState = EngineState.Started;
+            currentEngineState = EngineState.Started;
             EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StartFinished));
         }
-        
+
         public override void StopEngine()
         {
-            if (currentState == EngineState.Started)
+            if (currentEngineState == EngineState.Started)
             {
-                currentState = EngineState.Stopping;
+                currentEngineState = EngineState.Stopping;
                 EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StopBegin));
-                Tweener engineStopTween = DOTween.To(OnEnginePowerDecrease, Engine.maxPower, 0, Engine.stopTime);
+                Tweener engineStopTween = DOTween.To(OnEnginePowerDecrease, 1,
+                    0, VehicleAttribtes.engineAttributes.stopTime);
                 engineStopTween.onComplete += OnEngineStopFinish;
             }
         }
-        
+
         private void OnEngineStopFinish()
         {
-            currentState = EngineState.Stopped;
+            currentEngineState = EngineState.Stopped;
             EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StopFinish));
         }
 
-        private enum EngineState
-        {
-            Starting,Started,Stopping,Stopped
-        }
 
         private void OnEnginePowerIncrease(float power)
         {
-            currentEnginePower = power;
-            mainRotorAnimator.speed = currentEnginePower;
+            currentEnginePowerPercentage = power;
+            mainRotorAnimator.speed = currentEnginePowerPercentage * helicopterEngineAttribtes.maxPower;
+
+            var liftDelta = Mathf.Lerp(0, 1, (currentEnginePowerPercentage - 0.5f) * 2);
+            LiftObject(liftDelta);
         }
-        
+
         private void OnEnginePowerDecrease(float power)
         {
-            currentEnginePower = power;
-            mainRotorAnimator.speed = currentEnginePower;
+            currentEnginePowerPercentage = power;
+            mainRotorAnimator.speed = currentEnginePowerPercentage * helicopterEngineAttribtes.maxPower;
+
+            var liftDelta = Mathf.Lerp(0, 1, (currentEnginePowerPercentage - 0.5f) * 2);
+            LiftObject(liftDelta);
+        }
+
+        private void LiftObject(float heightDelta)
+        {
+            var position = movableObjectRootTransform.position;
+            position =
+                new Vector3(position.x, heightDelta * helicopterVehicleAttribtes.maxLiftHeight, position.z);
+            movableObjectRootTransform.position = position;
         }
 
         public override bool IsFullyOperational()
         {
-            return currentState == EngineState.Started;
+            return currentEngineState == EngineState.Started;
         }
-        
+
+        private enum EngineState
+        {
+            Starting,
+            Started,
+            Stopping,
+            Stopped
+        }
     }
 }

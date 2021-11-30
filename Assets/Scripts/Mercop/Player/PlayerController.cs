@@ -7,7 +7,6 @@ namespace Mercop.Player
     public class PlayerController : MonoBehaviour
     {
         // @formatter:off
-        [SerializeField] private Transform rootTransform;
         [SerializeField] private new Rigidbody rigidbody;
         [SerializeField] private EngineController engineController;
         // @formatter:on
@@ -18,7 +17,7 @@ namespace Mercop.Player
         {
             vehicleAttribtes = GameManager.Instance.playerSettings.selectedVehicle;
             rigidbody.maxAngularVelocity = vehicleAttribtes.rotationMaxRadiansPerSec;
-            engineController.Engine = vehicleAttribtes.engineAttributes;
+            engineController.VehicleAttribtes = vehicleAttribtes;
         }
 
         public void Rotate(Vector3 input)

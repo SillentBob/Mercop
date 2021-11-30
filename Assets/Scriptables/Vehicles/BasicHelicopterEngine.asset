@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BasicHelicopterEngine
   m_EditorClassIdentifier: 
   maxPower: 2
-  startTime: 4
-  stopTime: 3
+  startTime: 5
+  stopTime: 5
