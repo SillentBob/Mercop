@@ -22,7 +22,7 @@ namespace Mercop.Ui
         // @formatter:on
 
         private float fpsDeltaTime;
-
+        private float fps;
 #if UNITY_EDITOR
         private bool lastShowFps;
 #endif
@@ -40,7 +40,7 @@ namespace Mercop.Ui
             if (showFps)
             {
                 fpsDeltaTime += (Time.unscaledDeltaTime - fpsDeltaTime) * 0.1f;
-                var fps = 1.0f / fpsDeltaTime;
+                fps = 1.0f / fpsDeltaTime;
                 fpsText.SetText(Mathf.Ceil(fps).ToString());
             }
         }

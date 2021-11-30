@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eb0ba6ab19ca454ba704cd018035d41, type: 3}
   m_Name: BasicHelicopterAttributes
   m_EditorClassIdentifier: 
-  moveMaxSpeed: 10
+  moveMaxSpeed: 100
   moveAcceleration: 20
   moveForceMode: 1
   rotationAcceleration: 200
@@ -22,3 +22,4 @@ MonoBehaviour:
   maxFuel: 500
   engineAttributes: {fileID: 11400000, guid: 78b5a195374532644b1670df1dd68199, type: 2}
   strafeSpeed: 1
+  maxLiftHeight: 20

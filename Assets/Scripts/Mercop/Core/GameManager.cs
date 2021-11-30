@@ -6,6 +6,7 @@ using Mercop.Core.Events;
 using Mercop.Core.Web.Data;
 using Mercop.Mission;
 using Mercop.Player;
+using Mercop.Ui;
 using UnityEngine;
 
 namespace Mercop.Core
@@ -41,12 +42,22 @@ namespace Mercop.Core
             base.Awake();
             EventManager.AddListener<PauseEvent>(OnPauseChange);
             EventManager.AddListener<QuitGameEvent>(OnGameQuit);
+            EventManager.AddListener<ContractsFinishEvent>(OnContractFinish);
             SetGameFpsSettings(useVsync, limitFps, maxFps);
         }
 
         public List<MissionContractAttributes> getAvailableContracts()
         {
             return allContracts.Where(m => !m.completed).ToList();
+        }
+
+        private void OnContractFinish(ContractsFinishEvent evt)
+        {
+            selectedContract.completed = true;
+            AddPlayerScore(selectedContract.reward.experience);
+            SubmitPlayerScore(
+                (isFinishSuccesful) => { ViewManager.Instance.ShowView<MainMenuView>(); }
+            );
         }
 
         private void OnPauseChange(PauseEvent evt)
@@ -76,10 +87,7 @@ namespace Mercop.Core
 
         public void GetLeaderboards(Action<LeaderboardsData> onLoadFinish)
         {
-            GetPlayerAuthId(pData =>
-            {
-                dataProvider.GetLeaderboardsData("PL", pData.idToken, onLoadFinish);
-            });
+            GetPlayerAuthId(pData => { dataProvider.GetLeaderboardsData("PL", pData.idToken, onLoadFinish); });
         }
 
         public void SubmitPlayerScore(Action<bool> onPostFinish)

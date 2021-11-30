@@ -29,7 +29,7 @@ namespace Mercop.Core.Web
 
         public static IEnumerator PostData(UnityWebRequest request, string jsonTextData, Action<bool> onFinish)
         {
-            yield return new WaitForSeconds(2); //simulate network delay
+            yield return new WaitForSeconds(0.5f); //simulate network delay
             if (request.url.Contains(RequestParameters.POST_LEADERBOARDS))
             {
                 var isPosted = DoPostLeaderboardsData(request.url, jsonTextData);

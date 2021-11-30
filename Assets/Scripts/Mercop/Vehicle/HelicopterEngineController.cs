@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using Mercop.Core;
 using Mercop.Core.Events;
 using UnityEngine;
@@ -17,11 +18,10 @@ namespace Mercop.Vehicle
 
         private HelicopterAttributes helicopterVehicleAttribtes;
         private HelicopterEngineAttributes helicopterEngineAttribtes;
-
-        private void Awake()
+        
+        private void Start()
         {
-            //TODO fix this blind casting
-            helicopterVehicleAttribtes = VehicleAttribtes as HelicopterAttributes;
+            helicopterVehicleAttribtes = (HelicopterAttributes)VehicleAttribtes;
             helicopterEngineAttribtes = helicopterVehicleAttribtes.engineAttributes as HelicopterEngineAttributes;
 
             objectStartPosition = movableObjectRootTransform.position;

@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace Mercop.Vehicle
 {
+    [Serializable]
     public abstract class VehicleAttribtes : ScriptableObject
     {
         [Range(1, 100)] public float moveMaxSpeed = 10;

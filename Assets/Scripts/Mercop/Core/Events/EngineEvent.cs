@@ -3,10 +3,9 @@
     public class EngineEvent : BaseEvent
     {
         public EngineEventType engineEventType;
-        public bool isActionFinished;
         public EngineEvent(EngineEventType type)
         {
-            this.engineEventType = type;
+            engineEventType = type;
         }
         
         public enum EngineEventType
