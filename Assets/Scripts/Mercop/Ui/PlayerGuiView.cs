@@ -24,9 +24,7 @@ namespace Mercop.Ui
 
         private float fpsDeltaTime;
         private float fps;
-#if UNITY_EDITOR
         private bool lastShowFps;
-#endif
 
         protected override void Awake()
         {
@@ -61,7 +59,7 @@ namespace Mercop.Ui
             engineStartButton.interactable = true;
             engineStopButton.interactable = false;
         }
-        
+
         private void OnEngineEvent(EngineEvent evt)
         {
             switch (evt.engineEventType)
@@ -83,13 +81,6 @@ namespace Mercop.Ui
                     engineStopButton.interactable = false;
                     break;
             }
-        }
-
-        private void OnEngineStopBegin()
-        {
-            EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StopBegin));
-            engineStartButton.interactable = false;
-            engineStopButton.interactable = false;
         }
 
         public void MoveCrosshair(Vector2 input, Vector2 sensitivity, Vector2 moveRange)
@@ -118,6 +109,7 @@ namespace Mercop.Ui
             ViewManager.Instance.ShowView<PauseMenuView>();
         }
 
+#if UNITY_EDITOR
         private void OnValidate()
         {
             if (lastShowFps != showFps)
@@ -129,6 +121,7 @@ namespace Mercop.Ui
                 }
             }
         }
+#endif
 
         public override void OnShow()
         {

@@ -116,6 +116,7 @@ namespace Mercop.Core
             currentPlayerScore += score;
         }
 
+#if UNITY_EDITOR
         private void OnValidate()
         {
             if (lastLimitFps != limitFps)
@@ -144,6 +145,7 @@ namespace Mercop.Core
                 SetGameFpsSettings(useVsync, limitFps, maxFps);
             }
         }
+#endif
 
         private void SetGameFpsSettings(bool useVsyncVal, bool useFpsLimitVal, int maxFpsVal)
         {
@@ -157,9 +159,8 @@ namespace Mercop.Core
                 limitFps = false;
                 useVsync = true;
             }
-
-            QualitySettings.vSyncCount = useVsync ? 1 : 0;
-            Application.targetFrameRate = limitFps && !useVsync ? maxFpsVal : -1;
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 120;
         }
     }
 }
