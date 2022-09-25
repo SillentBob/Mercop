@@ -40,8 +40,8 @@ namespace Mercop.Player
                 {
                     Vector3 forwardSpeed =
                         new Vector3(0, 0, input.y * vehicleAttribtes.moveAcceleration);
-                    rigidbody.AddRelativeForce(forwardSpeed,
-                        vehicleAttribtes.moveForceMode);
+                    //Debug.Log(forwardSpeed);
+                    rigidbody.AddRelativeForce(forwardSpeed);
                 }
             }
         }

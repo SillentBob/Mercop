@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Mercop.Ui
 {
-    public class MainMenuView : View
+    public class MainMenuState : State
     {
         // @formatter:off
         [Header("Main Menu")] 
@@ -34,8 +34,8 @@ namespace Mercop.Ui
         {
             quitButton.onClick.AddListener(QuitGame);
             playerNameInput.onValueChanged.AddListener(SetPlayerName);
-            contractsButton.onClick.AddListener(() => ViewManager.Instance.ShowView<ContractsView>());
-            leaderboardsButton.onClick.AddListener(() => ViewManager.Instance.ShowView<LeaderboardsView>());
+            contractsButton.onClick.AddListener(() => StatesManager.Instance.LoadState<ContractsState>());
+            leaderboardsButton.onClick.AddListener(() => StatesManager.Instance.LoadState<LeaderboardsState>());
         }
 
         private void RegisterClickSounds()
@@ -60,12 +60,12 @@ namespace Mercop.Ui
             EventManager.Invoke(new QuitGameEvent());
         }
 
-        public override void OnShow()
+        public override void OnStateEnter()
         {
             EnableView(true);
         }
 
-        public override void OnHide()
+        public override void OnStateExit()
         {
             EnableView(false);
         }

@@ -6,16 +6,20 @@ namespace Mercop.Audio
     //TODO!! sources pooling
     public class AudioPlayer : Singleton<AudioPlayer>
     {
+        [SerializeField] private bool enabled = true;
         [SerializeField] private AudioClip music;
         [SerializeField] private AudioClip engine;
         [SerializeField] private AudioClip uiClick;
-
         private AudioSource musicSource;
         private AudioSource engineSource;
         private AudioSource uiClickSource;
 
         public void Play(Sound sound)
         {
+            if (!enabled)
+            {
+                return;
+            }
             switch (sound)
             {
                 case Sound.Music:

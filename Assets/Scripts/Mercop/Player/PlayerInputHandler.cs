@@ -1,3 +1,4 @@
+using System;
 using Mercop.Ui;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,14 +36,17 @@ namespace Mercop.Player
 
         private void Update()
         {
-            if (isMoving)
-            {
-                ProcessMoveInputs();
-            }
-
             if (isAiming)
             {
                 ProcessAimInputs();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (isMoving)
+            {
+                ProcessMoveInputs();
             }
         }
 
@@ -62,12 +66,13 @@ namespace Mercop.Player
             var forwardInput = currentMoveValues.y;
             if (rotationInput != 0)
             {
-                playerController.Rotate(new Vector3(0, rotationInput * Time.deltaTime, 0));
+                playerController.Rotate(new Vector3(0, rotationInput * Time.fixedDeltaTime, 0));
             }
 
             if (forwardInput != 0)
             {
-                playerController.Move(new Vector3(0, forwardInput * Time.deltaTime, 0));
+                var x = Mathf.Clamp(forwardInput * 1.5f, -1f, 1f);
+                playerController.Move(new Vector3(0,  x * Time.fixedDeltaTime, 0));
             }
         }
 
@@ -81,7 +86,7 @@ namespace Mercop.Player
 
         private void MoveCrosshair(Vector2 input)
         {
-            PlayerGuiView.Instance.MoveCrosshair(input, crosshairMoveSensitivity, crosshairMoveRange);
+            PlayerGameGuiState.Instance.MoveCrosshair(input, crosshairMoveSensitivity, crosshairMoveRange);
         }
 
         private void RegisterKeysToFunctions()

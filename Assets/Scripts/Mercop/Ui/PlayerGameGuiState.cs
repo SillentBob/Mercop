@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Mercop.Ui
 {
-    public class PlayerGuiView : SingletonView<PlayerGuiView>
+    public class PlayerGameGuiState : SingletonState<PlayerGameGuiState>
     {
         // @formatter:off
         [Header("Player GUI")]
@@ -29,6 +29,7 @@ namespace Mercop.Ui
         protected override void Awake()
         {
             base.Awake();
+            ShowGui(false);
             RegisterButtonListeners();
             RegisterEventListeners();
             SetupButtons();
@@ -42,6 +43,18 @@ namespace Mercop.Ui
                 fps = 1.0f / fpsDeltaTime;
                 fpsText.SetText(Mathf.Ceil(fps).ToString());
             }
+        }
+        
+        public override void OnStateEnter()
+        {
+            ShowGui(true);
+            //AudioPlayer.Instance.Play(AudioPlayer.Sound.Music);
+        }
+
+        public override void OnStateExit()
+        {
+            ShowGui(false);
+            //AudioPlayer.Instance.Stop(AudioPlayer.Sound.Music);
         }
 
         private void RegisterButtonListeners()
@@ -68,7 +81,7 @@ namespace Mercop.Ui
                     engineStartButton.interactable = false;
                     engineStopButton.interactable = false;
                     break;
-                case EngineEvent.EngineEventType.StartFinished:
+                case EngineEvent.EngineEventType.StartFinish:
                     engineStartButton.interactable = false;
                     engineStopButton.interactable = true;
                     break;
@@ -106,7 +119,7 @@ namespace Mercop.Ui
         private void OnPauseClick()
         {
             EventManager.Invoke(new PauseEvent(true));
-            ViewManager.Instance.ShowView<PauseMenuView>();
+            StatesManager.Instance.LoadState<PauseMenuState>();
         }
 
 #if UNITY_EDITOR
@@ -122,17 +135,6 @@ namespace Mercop.Ui
             }
         }
 #endif
-
-        public override void OnShow()
-        {
-            ShowGui(true);
-            AudioPlayer.Instance.Play(AudioPlayer.Sound.Music);
-        }
-
-        public override void OnHide()
-        {
-            ShowGui(false);
-            AudioPlayer.Instance.Stop(AudioPlayer.Sound.Music);
-        }
+        
     }
 }

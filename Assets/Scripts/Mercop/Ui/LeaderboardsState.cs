@@ -6,7 +6,7 @@ using Mercop.Ui;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LeaderboardsView : View
+public class LeaderboardsState : State
 {
     // @formatter:off
     [SerializeField] private Leaderboards leaderboardsRoot;
@@ -45,7 +45,7 @@ public class LeaderboardsView : View
 
     private void RegisterButtonEvents()
     {
-        backButton.onClick.AddListener(ViewManager.Instance.PreviousView);
+        backButton.onClick.AddListener(StatesManager.Instance.PreviousState);
     }
     
     private void RegisterClickSounds()
@@ -135,6 +135,7 @@ public class LeaderboardsView : View
         visibleRowsCountWithBuffer = visibleCount + rowsBufferTop + rowsBufferBottom;
         rows = new List<RectTransform>(visibleRowsCountWithBuffer);
         rowsViews = new Dictionary<RectTransform, LeaderboardsContentRowView>();
+        Debug.Log(scrollRect.GetComponent<RectTransform>().rect.height);
         rowHeight = list.rect.height / visibleCount;
         scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, rowHeight * rowsCount);
 
@@ -188,13 +189,13 @@ public class LeaderboardsView : View
         }
     }
 
-    public override void OnShow()
+    public override void OnStateEnter()
     {
         EnableMenu(true);
         BuildScrollListContentOnce();
     }
 
-    public override void OnHide()
+    public override void OnStateExit()
     {
         EnableMenu(false);
     }

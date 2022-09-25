@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Mercop.Ui
 {
-    public class PauseMenuView : View
+    public class PauseMenuState : State
     {
         // @formatter:off
         [SerializeField] private PauseMenu pauseMenuRoot;
@@ -43,7 +43,7 @@ namespace Mercop.Ui
 
         private void ResumeGameplay()
         {
-            ViewManager.Instance.ShowView<PlayerGuiView>();
+            StatesManager.Instance.LoadState<PlayerGameGuiState>();
         }
         
         private void ShowPauseMenu(bool show)
@@ -53,16 +53,16 @@ namespace Mercop.Ui
 
         private void LoadMainMenu()
         {
-            ViewManager.Instance.ShowView<MainMenuView>();
+            StatesManager.Instance.LoadState<MainMenuState>();
         }
 
-        public override void OnShow()
+        public override void OnStateEnter()
         {
             ShowPauseMenu(true);
             EventManager.Invoke(new PauseEvent(true));
         }
 
-        public override void OnHide()
+        public override void OnStateExit()
         {
             ShowPauseMenu(false);
             EventManager.Invoke(new PauseEvent(false));

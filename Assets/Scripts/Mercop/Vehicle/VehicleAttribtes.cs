@@ -6,9 +6,9 @@ namespace Mercop.Vehicle
     [Serializable]
     public abstract class VehicleAttribtes : ScriptableObject
     {
-        [Range(1, 100)] public float moveMaxSpeed = 10;
+        [Range(1, 1000)] public float moveMaxSpeed = 10;
 
-        [Range(1, 100)] public float moveAcceleration = 10;
+        [Range(1, 10000)] public float moveAcceleration = 1000;
 
         public ForceMode moveForceMode = ForceMode.Impulse;
 

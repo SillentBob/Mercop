@@ -42,7 +42,7 @@ namespace Mercop.Core
         private void ShowMainMenu()
         {
             Debug.Log("ShowMainMenu");
-            ViewManager.Instance.ShowView<MainMenuView>();
+            StatesManager.Instance.LoadState<MainMenuState>();
             if (loadedScenes.Contains(currentGameLevelSceneName))
             {
                 UnloadSceneAsync(currentGameLevelSceneName);
@@ -57,7 +57,7 @@ namespace Mercop.Core
                 SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
                 loadedScenes.Add(sceneName);
                 currentGameLevelSceneName = sceneName;
-                AudioPlayer.Instance.Play(AudioPlayer.Sound.Music);
+                //AudioPlayer.Instance.Play(AudioPlayer.Sound.Music);
             }
         }
 

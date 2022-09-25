@@ -381,6 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ed9978b2ce468da4b852e57e133297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enabled: 0
   music: {fileID: 8300000, guid: 188c262021772684295061372e59048a, type: 3}
   engine: {fileID: 8300000, guid: 1f5a886e771e12a43b07dd7eeb23b8a8, type: 3}
   uiClick: {fileID: 8300000, guid: b7831c1308f5025428ef9285dc363ce5, type: 3}
@@ -608,7 +609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e48edede72b4724bc7dfd60858b85cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  views:
+  states:
   - {fileID: 14468255}
   - {fileID: 1496218647}
   - {fileID: 772812478}
@@ -966,7 +967,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4344356365017557415, guid: f746bd29736b76c4e88dc5f784fc9197,
+        type: 3}
+      propertyPath: m_ControlPath
+      value: <Gamepad>/leftStick
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1040311299205337474, guid: f746bd29736b76c4e88dc5f784fc9197, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f746bd29736b76c4e88dc5f784fc9197, type: 3}
 --- !u!1001 &1585516190275494210
 PrefabInstance:

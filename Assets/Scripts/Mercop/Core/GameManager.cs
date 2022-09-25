@@ -56,7 +56,7 @@ namespace Mercop.Core
             selectedContract.completed = true;
             AddPlayerScore(selectedContract.reward.experience);
             SubmitPlayerScore(
-                (isFinishSuccesful) => { ViewManager.Instance.ShowView<MainMenuView>(); }
+                (isFinishSuccesful) => { StatesManager.Instance.LoadState<MainMenuState>(); }
             );
         }
 

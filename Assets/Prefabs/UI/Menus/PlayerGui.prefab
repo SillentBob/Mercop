@@ -521,7 +521,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1040311298216143797
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1287,7 +1287,7 @@ GameObject:
   - component: {fileID: 1040311299205337473}
   - component: {fileID: 1040311299205337596}
   - component: {fileID: 1040311299205337475}
-  - component: {fileID: 1040311299205337474}
+  - component: {fileID: 4344356365017557415}
   m_Layer: 5
   m_Name: MoveJoystick
   m_TagString: Untagged
@@ -1352,7 +1352,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1040311299205337474
+--- !u!114 &4344356365017557415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1361,7 +1361,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1040311299205337472}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9d677f1681015749b15c436eec6d880, type: 3}
+  m_Script: {fileID: 11500000, guid: c735d645e5a042a187ca32bc4ef9eff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_MovementRange: 100

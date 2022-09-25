@@ -47,7 +47,7 @@ namespace Mercop.Vehicle
         private void OnEngineStartFinish()
         {
             currentEngineState = EngineState.Started;
-            EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StartFinished));
+            EventManager.Invoke(new EngineEvent(EngineEvent.EngineEventType.StartFinish));
         }
 
         public override void StopEngine()

@@ -7,6 +7,10 @@ public class LeaderboardsContentRowView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerNameText;
     [SerializeField] private TextMeshProUGUI playerScoreText;
 
+    private string playerName;
+    private int score;
+    private int placeNumber;
+    
     public string PlayerName
     {
         get => playerName;
@@ -36,8 +40,4 @@ public class LeaderboardsContentRowView : MonoBehaviour
             playerScoreText.SetText(score.ToString());
         }
     }
-
-    private string playerName;
-    private int score;
-    private int placeNumber;
 }

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace Mercop.Ui
 {
-    public class ContractsView : View
+    public class ContractsState : State
     {
         // @formatter:off
         [Header("Contracts Menu")] 
@@ -39,7 +39,7 @@ namespace Mercop.Ui
 
         private void RegisterEventListeners()
         {
-            contractsBackButton.onClick.AddListener(ViewManager.Instance.PreviousView);
+            contractsBackButton.onClick.AddListener(StatesManager.Instance.PreviousState);
             contractsPlayButton.onClick.AddListener(LoadSelectedLevel);
         }
         
@@ -110,7 +110,7 @@ namespace Mercop.Ui
 
         private void LoadSelectedLevel()
         {
-            ViewManager.Instance.ShowView<PlayerGuiView>(() => EventManager.Invoke(new LoadSceneEvent(
+            StatesManager.Instance.LoadState<PlayerGameGuiState>(() => EventManager.Invoke(new LoadSceneEvent(
                 GameManager.Instance.selectedContract.sceneName, false, true,
                 true)));
         }
@@ -120,13 +120,13 @@ namespace Mercop.Ui
             contractsRoot.gameObject.SetActive(enable);
         }
 
-        public override void OnShow()
+        public override void OnStateEnter()
         {
             RePopulateContractsList();
             EnableView(true);
         }
 
-        public override void OnHide()
+        public override void OnStateExit()
         {
             EnableView(false);
         }

@@ -10,7 +10,7 @@
         
         public enum EngineEventType
         {
-            StartBegin, StartFinished, StopBegin, StopFinish
+            StartBegin, StartFinish, StopBegin, StopFinish
         }
     }
 }

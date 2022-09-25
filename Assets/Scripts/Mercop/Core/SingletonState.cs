@@ -2,15 +2,15 @@
 
 namespace Mercop.Core
 {
-    public class SingletonView<T> : View where T:View
+    public class SingletonState<T> : State where T:State
     {
         private static T instance;
         
-        public override void OnShow()
+        public override void OnStateEnter()
         {
         }
 
-        public override void OnHide()
+        public override void OnStateExit()
         {
         }
         
